@@ -33,7 +33,7 @@ export default function Register() {
                 `${BaseUrl}/auth/signup`,
                 formData
             );
-            if (response.statusCode === 200) {
+            if (response.statusCode === 201) {
                 toast.success("Registered successfully");
             } else {
                 toast.error(response.data.message || "Registration failed");
