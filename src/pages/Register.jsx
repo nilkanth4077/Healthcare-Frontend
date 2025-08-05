@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { toast } from "react-toastify";
+import BaseUrl from "../BaseUrl";
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -29,7 +30,7 @@ export default function Register() {
 
         try {
             const response = await axios.post(
-                "http://localhost:8080/auth/signup",
+                `${BaseUrl}/auth/signup`,
                 formData
             );
             if (response.statusCode === 200) {

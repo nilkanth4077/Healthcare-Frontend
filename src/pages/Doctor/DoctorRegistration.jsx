@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import { toast } from "react-toastify";
+import BaseUrl from "../../BaseUrl";
 
 export default function DoctorRegistration() {
     const [formData, setFormData] = useState({
@@ -43,7 +44,7 @@ export default function DoctorRegistration() {
             form.append("specialization", formData.specialization);
             form.append("documentFile", formData.documentFile);
 
-            const response = await axios.post("http://localhost:8080/auth/register-doctor", form, {
+            const response = await axios.post(`${BaseUrl}/auth/register-doctor`, form, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

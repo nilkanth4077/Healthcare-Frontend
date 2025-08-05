@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { toast } from "react-toastify";
+import BaseUrl from "../BaseUrl";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Login = () => {
         try {
             // http://localhost:8080
             // https://healthcare-ot3a.onrender.com
-            const response = await axios.post("http://localhost:8080/auth/login", {
+            const response = await axios.post(`${BaseUrl}/auth/login`, {
                 email,
                 password,
             });

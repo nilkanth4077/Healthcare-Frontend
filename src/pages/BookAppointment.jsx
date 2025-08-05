@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
+import BaseUrl from "../BaseUrl";
 
 function BookAppointment() {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ function BookAppointment() {
             }
 
             axios
-                .get("http://localhost:8080/speciality/all", {
+                .get(`${BaseUrl}/speciality/all`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

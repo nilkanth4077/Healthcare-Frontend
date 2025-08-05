@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import Navbar from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
+import BaseUrl from "../../BaseUrl";
 
 const AppointmentDetails = () => {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ const AppointmentDetails = () => {
         }
 
         axios
-            .get("http://localhost:8080/user/doctor-by-speciality", {
+            .get(`${BaseUrl}/user/doctor-by-speciality`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

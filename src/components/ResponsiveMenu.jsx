@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import BaseUrl from "../BaseUrl";
 
 const ResponsiveMenu = ({ open }) => {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ const ResponsiveMenu = ({ open }) => {
             const fetchUserProfile = async () => {
                 try {
                     const response = await fetch(
-                        "http://localhost:8080/auth/profile",
+                        `${BaseUrl}/auth/profile`,
                         {
                             method: "GET",
                             headers: { Authorization: `Bearer ${token}` },
