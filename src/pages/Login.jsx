@@ -15,11 +15,30 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const existingToken = localStorage.getItem("token");
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setError("");
+
+        const existingToken = localStorage.getItem("token");
+        const existingUser = JSON.parse(localStorage.getItem("user"));
+
+        if (existingToken && existingUser) {
+            if (existingUser.role === "ADMIN") {
+                toast.info("You're already logged in as Admin");
+                navigate("/admin-dashboard");
+            } else if (existingUser.role === "DOCTOR") {
+                toast.info("You're already logged in as Doctor");
+                navigate("/doctor-dashboard");
+            } else {
+                toast.info("You're already logged in");
+                navigate("/");
+            }
+            return;
+        }
+
+        setLoading(true);
 
         try {
             // http://localhost:8080

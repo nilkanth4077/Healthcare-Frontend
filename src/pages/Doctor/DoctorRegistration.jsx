@@ -180,16 +180,23 @@ export default function DoctorRegistration() {
                             className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
                         />
 
-                        <input
-                            type="file"
-                            name="documentFile"
-                            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                            onChange={handleChange}
-                            required
-                            className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
-                        />
+                        <div className="relative group w-full">
+                            <input
+                                type="file"
+                                name="documentFile"
+                                accept=".pdf"
+                                onChange={handleChange}
+                                required
+                                className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
+                            />
+                            <span className="absolute -top-8 left-0 w-max bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Only PDF is allowed
+                            </span>
+                        </div>
 
                     </div>
+
+                    <div className="text-mtext text-md mt-4 text-left"><b>Merge all documents in single PDF then Upload*</b></div>
 
                     {error && (
                         <div className="text-red-500 text-sm mt-4 text-center">{error}</div>

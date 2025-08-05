@@ -31,6 +31,8 @@ import DoctorRegistration from './pages/Doctor/DoctorRegistration';
 import AppointmentDetails from './pages/Patient/AppointmentDetails';
 import ManageUsers from './pages/Admin/pages/ManageUsers';
 import AdminDashHome from './pages/Admin/AdminDashHome';
+import DoctorListPage from './pages/Doctor/DoctorListPage';
+import DoctorDetails from './pages/Doctor/DoctorDetails';
 
 
 
@@ -51,6 +53,8 @@ function App() {
           <Route path='/appointment-details' element={<AppointmentDetails />} />
           <Route path='/manage-users' element={<ManageUsers />} />
           <Route path='/admin-dash-home' element={<AdminDashHome />} />
+          <Route path='/manage-doctors' element={<DoctorListPage />} />
+          <Route path='/doctor/:docId' element={<DoctorDetails />} />
           {/* <Route path="/datetimepicker" element={<DateTimePicker />} />
           <Route path="/docreg" element={<Doctorreg />} />
           <Route path="/patientreg" element={<Patientreg />} />
