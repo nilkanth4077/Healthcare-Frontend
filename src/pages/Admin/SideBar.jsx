@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { BiHome, BiBookAlt } from "react-icons/bi";
-import "./AdminDashboard.css";
-import "./SideBar.css";
+import "./style/AdminDashboard.css";
+import "./style/SideBar.css";
 
 const SideBar = () => {
     return (

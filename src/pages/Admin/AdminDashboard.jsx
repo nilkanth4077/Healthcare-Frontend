@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import SideBar from "./SideBar";
-import "./AdminDashboard.css"; // styling
+import "./style/AdminDashboard.css";
 import Content from "./Content";
 import Profile from "./Profile";
 
