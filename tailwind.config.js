@@ -8,7 +8,8 @@ export default {
       colors: {
         primary: "#16A085",
         secondary: "#F4D03F",
-        back: "#121212"
+        back: "#121212",
+        mtext: "#121212"
       },
 
       fontFamily: {

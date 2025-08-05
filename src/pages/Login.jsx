@@ -57,16 +57,16 @@ const Login = () => {
     return (
         <>
             <Navbar />
-            <div className="flex items-center justify-center min-h-screen bg-gray-900">
-                <div className="w-full max-w-md bg-gray-800 p-8 rounded-lg shadow-md">
-                    <h2 className="text-3xl font-bold text-center mb-6 text-white">Login</h2>
+            <div className="flex items-center justify-center min-h-screen bg-back">
+                <div className="w-full max-w-md bg-primary p-8 rounded-lg shadow-md">
+                    <h2 className="text-3xl font-bold text-center mb-6 text-mtext">Login</h2>
 
                     <form onSubmit={handleLogin} className="space-y-5">
                         <div>
-                            <label className="block mb-1 text-sm text-gray-300">Email</label>
+                            <label className="block mb-1 text-sm text-mtext">Email</label>
                             <input
                                 type="email"
-                                className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
@@ -74,11 +74,11 @@ const Login = () => {
                         </div>
 
                         <div>
-                            <label className="block mb-1 text-sm text-gray-300">Password</label>
+                            <label className="block mb-1 text-sm text-mtext">Password</label>
                             <div className="relative w-full">
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
@@ -88,9 +88,9 @@ const Login = () => {
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
                                     {showPassword ? (
-                                        <AiOutlineEyeInvisible className="text-white" />
+                                        <AiOutlineEyeInvisible className="text-mtext" />
                                     ) : (
-                                        <AiOutlineEye className="text-white" />
+                                        <AiOutlineEye className="text-mtext" />
                                     )}
                                 </div>
                             </div>
@@ -101,11 +101,11 @@ const Login = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded transition duration-200"
+                            className="w-full py-2 px-4 bg-back hover:bg-secondary text-white hover:text-black font-semibold rounded transition duration-200"
                         >
                             {loading ? (
                                 <div className="flex items-center justify-center">
-                                    <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
+                                    <svg className="animate-spin h-5 w-5 mr-2 text-mtext" viewBox="0 0 24 24">
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
                                         <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
                                     </svg>
@@ -116,7 +116,7 @@ const Login = () => {
                             )}
                         </button>
                     </form>
-                    <h3 className="text-center text-white mt-4">New User ? <a href="/register" className="text-stone-300 hover:text-white">Register Here !!</a></h3>
+                    <h3 className="text-center text-mtext mt-4">New User ? <a href="/register" className="text-black hover:text-secondary">Register Here !!</a></h3>
                 </div>
             </div>
             <Footer />

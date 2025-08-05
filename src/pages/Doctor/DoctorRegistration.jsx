@@ -4,8 +4,14 @@ import Navbar from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import { toast } from "react-toastify";
 import BaseUrl from "../../reusables/BaseUrl";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function DoctorRegistration() {
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -16,9 +22,6 @@ export default function DoctorRegistration() {
         specialization: "",
         documentFile: null,
     });
-
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -74,13 +77,13 @@ export default function DoctorRegistration() {
     return (
         <>
             <Navbar />
-            <div className="flex items-center justify-center min-h-screen bg-gray-900 p-4">
+            <div className="flex items-center justify-center min-h-screen bg-back p-4">
                 <form
                     onSubmit={handleSubmit}
                     encType="multipart/form-data"
-                    className="w-full max-w-lg bg-gray-800 p-8 rounded-xl shadow-lg"
+                    className="w-full max-w-lg bg-primary p-8 rounded-xl shadow-lg"
                 >
-                    <h2 className="text-2xl font-semibold text-center text-white mb-6">Register As Doctor</h2>
+                    <h2 className="text-3xl font-bold text-center text-back mb-6">Register As Doctor</h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input
@@ -90,7 +93,7 @@ export default function DoctorRegistration() {
                             value={formData.firstName}
                             onChange={handleChange}
                             required
-                            className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
                         />
 
                         <input
@@ -100,7 +103,7 @@ export default function DoctorRegistration() {
                             value={formData.lastName}
                             onChange={handleChange}
                             required
-                            className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
                         />
 
                         <input
@@ -110,7 +113,7 @@ export default function DoctorRegistration() {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
                         />
 
                         <input
@@ -120,28 +123,52 @@ export default function DoctorRegistration() {
                             value={formData.mobile}
                             onChange={handleChange}
                             required
-                            className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
                         />
 
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        <div className="relative w-full">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                placeholder="Password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                                className="w-full p-2 pr-10 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
+                            />
+                            <div
+                                className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? (
+                                    <AiOutlineEyeInvisible className="text-mtext" />
+                                ) : (
+                                    <AiOutlineEye className="text-mtext" />
+                                )}
+                            </div>
+                        </div>
 
-                        <input
-                            type="password"
-                            name="confirmPassword"
-                            placeholder="Confirm Password"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            required
-                            className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        <div className="relative w-full">
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                name="confirmPassword"
+                                placeholder="Confirm Password"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                required
+                                className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
+                            />
+                            <div
+                                className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                                {showConfirmPassword ? (
+                                    <AiOutlineEyeInvisible className="text-mtext" />
+                                ) : (
+                                    <AiOutlineEye className="text-mtext" />
+                                )}
+                            </div>
+                        </div>
 
                         <input
                             type="text"
@@ -150,7 +177,7 @@ export default function DoctorRegistration() {
                             value={formData.specialization}
                             onChange={handleChange}
                             required
-                            className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
                         />
 
                         <input
@@ -159,7 +186,7 @@ export default function DoctorRegistration() {
                             accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                             onChange={handleChange}
                             required
-                            className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
                         />
 
                     </div>
@@ -170,12 +197,12 @@ export default function DoctorRegistration() {
 
                     <button
                         type="submit"
-                        className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex justify-center items-center"
+                        className="w-full mt-6 bg-back hover:bg-secondary text-white hover:text-black py-2 px-4 rounded flex justify-center items-center"
                         disabled={loading}
                     >
                         {loading ? (
                             <svg
-                                className="animate-spin h-5 w-5 text-white"
+                                className="animate-spin h-5 w-5 text-mtext"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
@@ -198,7 +225,7 @@ export default function DoctorRegistration() {
                             "Register"
                         )}
                     </button>
-                    <h3 className="text-center text-white mt-4">Already a User ? <a href="/login" className="text-stone-300 hover:text-white">Login Here !!</a></h3>
+                    <h3 className="text-center text-mtext mt-4">Already a User ? <a href="/login" className="text-mtext hover:text-secondary">Login Here !!</a></h3>
                 </form>
             </div>
             <Footer />

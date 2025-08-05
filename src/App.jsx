@@ -37,7 +37,7 @@ import AdminDashHome from './pages/Admin/AdminDashHome';
 function App() {
   return (
     <>
-      <h4 className='font-bold flex justify-center bg-secondary'>Our website is under development, but feel free to explore - some sections may be incomplete !!</h4>
+      <h4 className='font-bold flex justify-center bg-secondary'><span className='mx-3'>Our website is under development, but feel free to explore - some sections may be incomplete !!</span></h4>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
