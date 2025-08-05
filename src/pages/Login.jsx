@@ -5,9 +5,12 @@ import Navbar from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { toast } from "react-toastify";
 import BaseUrl from "../reusables/BaseUrl";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Login = () => {
+
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -72,13 +75,25 @@ const Login = () => {
 
                         <div>
                             <label className="block mb-1 text-sm text-gray-300">Password</label>
-                            <input
-                                type="password"
-                                className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
+                            <div className="relative w-full">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <div
+                                    className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? (
+                                        <AiOutlineEyeInvisible className="text-white" />
+                                    ) : (
+                                        <AiOutlineEye className="text-white" />
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
                         {error && <p className="text-red-500 text-sm">{error}</p>}
