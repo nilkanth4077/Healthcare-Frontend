@@ -38,8 +38,8 @@ export default function Register() {
                 `${BaseUrl}/auth/signup`,
                 formData
             );
-            if (response.statusCode === 201) {
-                toast.success("Registered successfully");
+            if (response.data.statusCode === 201) {
+                toast.success(response.data.message || "User Registered successfully");
                 navigate("/login")
             } else {
                 toast.error(response.data.message || "Registration failed");
