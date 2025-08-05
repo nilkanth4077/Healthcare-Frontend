@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import Navbar from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
-import BaseUrl from "../../BaseUrl";
+import BaseUrl from "../../reusables/BaseUrl";
 
 const AppointmentDetails = () => {
     const navigate = useNavigate();

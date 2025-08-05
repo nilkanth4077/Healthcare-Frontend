@@ -1,10 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiHome, BiBookAlt } from "react-icons/bi";
 import "./style/AdminDashboard.css";
 import "./style/SideBar.css";
 
 const SideBar = () => {
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navigate("/");
+    };
+
     return (
         <div className="sidebar">
             <div className="menu">
@@ -29,9 +38,9 @@ const SideBar = () => {
                         <BiHome className="icon" />
                         <span>Dashboard</span>
                     </a>
-                    <a href="#" className="item">
+                    <a href="#" className="logout" onClick={() => handleLogout()}>
                         <BiHome className="icon" />
-                        <span>Dashboard</span>
+                        <span>Logout</span>
                     </a>
                 </div>
             </div>

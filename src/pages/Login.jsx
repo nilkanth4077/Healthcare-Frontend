@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { toast } from "react-toastify";
-import BaseUrl from "../BaseUrl";
+import BaseUrl from "../reusables/BaseUrl";
 
 const Login = () => {
     const navigate = useNavigate();

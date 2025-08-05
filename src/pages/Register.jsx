@@ -3,7 +3,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { toast } from "react-toastify";
-import BaseUrl from "../BaseUrl";
+import BaseUrl from "../reusables/BaseUrl";
 
 export default function Register() {
     const [formData, setFormData] = useState({

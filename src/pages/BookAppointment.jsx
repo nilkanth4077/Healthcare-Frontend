@@ -6,7 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
-import BaseUrl from "../BaseUrl";
+import BaseUrl from "../reusables/BaseUrl";
 
 function BookAppointment() {
     const navigate = useNavigate();

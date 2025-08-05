@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import BaseUrl from "../BaseUrl";
+import BaseUrl from "../reusables/BaseUrl";
 
 const ResponsiveMenu = ({ open }) => {
     const navigate = useNavigate();
