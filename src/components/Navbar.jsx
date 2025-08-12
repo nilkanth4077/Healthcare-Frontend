@@ -22,15 +22,15 @@ export default function Navigation() {
         ],
         DOCTOR: [
             { title: "Dashboard", link: "/doctor-dashboard" },
-            { title: "My Appointments", link: "/" },
-            { title: "Patients", link: "/" },
-            { title: "Profile", link: "/" },
+            { title: "My Appointments", link: "/doctor-dashboard" },
+            { title: "Patients", link: "/doctor-dashboard" },
+            { title: "Profile", link: "/doctor-dashboard" },
         ],
         ADMIN: [
             { title: "Admin Dashboard", link: "/admin-dashboard" },
-            { title: "Manage Doctors", link: "/" },
-            { title: "Manage Users", link: "/" },
-            { title: "Settings", link: "/" },
+            { title: "Manage Doctors", link: "/admin-dashboard" },
+            { title: "Manage Users", link: "/admin-dashboard" },
+            { title: "Settings", link: "/admin-dashboard" },
         ],
     };
 
