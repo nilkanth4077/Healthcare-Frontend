@@ -8,6 +8,7 @@ import BaseUrl from "../../reusables/BaseUrl";
 const DoctorListPage = () => {
     const navigate = useNavigate();
     const [doctors, setDoctors] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -38,6 +39,8 @@ const DoctorListPage = () => {
             } catch (error) {
                 console.error(error);
                 toast.error("Something went wrong while fetching doctors.");
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -50,7 +53,17 @@ const DoctorListPage = () => {
                 <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
                     Doctor List
                 </h2>
-                <DoctorList doctors={doctors} />
+
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-10">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary border-solid"></div>
+                        <p className="mt-4 text-gray-600 font-medium">
+                            Fetching doctors, please wait...
+                        </p>
+                    </div>
+                ) : (
+                    <DoctorList doctors={doctors} />
+                )}
             </div>
         </>
     );

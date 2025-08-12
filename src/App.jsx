@@ -29,7 +29,6 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import DoctorDashboard from './pages/Doctor/DoctorDashboard';
 import DoctorRegistration from './pages/Doctor/DoctorRegistration';
 import AppointmentDetails from './pages/Patient/AppointmentDetails';
-import ManageUsers from './pages/Admin/pages/ManageUsers';
 import AdminDashHome from './pages/Admin/AdminDashHome';
 import DoctorListPage from './pages/Doctor/DoctorListPage';
 import DoctorDetails from './pages/Doctor/DoctorDetails';
@@ -51,7 +50,6 @@ function App() {
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
           <Route path='/appointment-details' element={<AppointmentDetails />} />
-          <Route path='/manage-users' element={<ManageUsers />} />
           <Route path='/admin-dash-home' element={<AdminDashHome />} />
           <Route path='/manage-doctors' element={<DoctorListPage />} />
           <Route path='/doctor/:docId' element={<DoctorDetails />} />
