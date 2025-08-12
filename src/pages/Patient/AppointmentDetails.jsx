@@ -33,7 +33,6 @@ const AppointmentDetails = () => {
             .then((response) => {
                 if (response.data && response.data.data) {
                     setDoctors(response.data.data);
-                    console.log("Doctors:", response.data.data);
                 } else {
                     toast.error("Unexpected response format");
                 }

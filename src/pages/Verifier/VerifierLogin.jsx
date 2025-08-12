@@ -21,12 +21,10 @@ const VerifierLogin = () => {
       toast.error("Fill info first");
     }
     else {
-      console.log("submit call");
       e.preventDefault();
       setLoading(true);
 
       await axios.post("https://doc-appointment-node-backend.onrender.com/verifierlogin", verifierdetails).then((res) => {
-        //console.log(res);
         if (res.data.message === "ok") {
           localStorage.setItem('verifiertoken', res.data.token);
           toast.success("login Successful");

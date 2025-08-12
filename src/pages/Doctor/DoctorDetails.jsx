@@ -3,6 +3,8 @@ import axios from "axios";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import DoctorList from "./DoctorList";
+import Navbar from "../../components/Navbar";
+import { Footer } from "../../components/Footer";
 import BaseUrl from "../../reusables/BaseUrl";
 
 const DoctorDetails = () => {
@@ -50,22 +52,48 @@ const DoctorDetails = () => {
 
     return (
         <>
+            <Navbar />
             <div className="min-h-screen bg-gray-100 px-4 py-8">
-                <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-                    Doctor Name: {doctor.firstName}
-                </h2>
-                <div>
-                    {doctor.document && (
+                <h4 className="text-3xl font-bold mb-6 text-center text-gray-800">
+                    Doctor Details
+                </h4>
+                <table className="min-w-full  bg-white shadow-md rounded-lg overflow-hidden">
+                    <tbody>
+                        <tr>
+                            <th className="m-0 text-center">Name</th>
+                            <td className="py-3 text-left">{doctor.firstName} {doctor.lastName}</td>
+                        </tr>
+                        <tr>
+                            <th className="text-center">Email</th>
+                            <td className="py-3 text-left">{doctor.email}</td>
+                        </tr>
+                        <tr>
+                            <th className="text-center">Verification Status</th>
+                            <td className="py-3 text-left">{doctor.verificationStatus}</td>
+                        </tr>
+                        <tr>
+                            <th className="text-center">Speciality</th>
+                            <td className="py-3 text-left">{doctor.specialization}</td>
+                        </tr>
+                        <tr>
+                            <th className="text-center">Mobile</th>
+                            <td className="py-3 text-left">{doctor.mobile}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                {doctor.document && (
+                    <div className="bg-white shadow-md rounded-lg mt-4 p-4">
+                        <h3 className="text-center font-semibold mb-2">Document</h3>
                         <iframe
                             title="Doctor Document"
                             src={`data:application/pdf;base64,${doctor.document}`}
-                            width="100%"
-                            height="500px"
-                            className="rounded shadow"
+                            className="rounded shadow w-full"
+                            style={{ minHeight: "500px" }}
                         />
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
+            <Footer />
         </>
     );
 };

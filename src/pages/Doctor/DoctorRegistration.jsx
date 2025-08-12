@@ -54,7 +54,6 @@ export default function DoctorRegistration() {
             });
 
             toast.success("Doctor registered successfully!");
-            console.log(response.data);
 
             setFormData({
                 firstName: "",

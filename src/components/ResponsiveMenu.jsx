@@ -22,7 +22,6 @@ const ResponsiveMenu = ({ open }) => {
 
                     if (response.ok) {
                         const data = await response.json();
-                        console.log("User Profile:", data);
                         setUser(data);
                     } else {
                         localStorage.removeItem("token");
@@ -33,7 +32,6 @@ const ResponsiveMenu = ({ open }) => {
                     console.error("Error fetching user profile:", error);
                 }
             };
-
             fetchUserProfile();
         }
     }, [token]);
@@ -45,6 +43,31 @@ const ResponsiveMenu = ({ open }) => {
         navigate("/");
     };
 
+    const menuConfig = {
+        USER: [
+            { title: "Home", link: "/" },
+            { title: "Products", link: "/" },
+            { title: "My Orders", link: "/" },
+            { title: "About", link: "/" },
+            { title: "Contact", link: "/" },
+        ],
+        DOCTOR: [
+            { title: "Dashboard", link: "/doctor-dashboard" },
+            { title: "My Appointments", link: "/" },
+            { title: "Patients", link: "/" },
+            { title: "Profile", link: "/" },
+        ],
+        ADMIN: [
+            { title: "Admin Dashboard", link: "/admin-dashboard" },
+            { title: "Manage Doctors", link: "/" },
+            { title: "Manage Users", link: "/" },
+            { title: "Settings", link: "/" },
+        ],
+    };
+
+    const role = user?.role?.toUpperCase() || "USER";
+    const menuItems = menuConfig[role] || menuConfig.USER;
+
     return (
         <AnimatePresence mode="wait">
             {open && (
@@ -55,13 +78,13 @@ const ResponsiveMenu = ({ open }) => {
                     transition={{ duration: 0.3 }}
                     className="absolute top-20 left-0 w-full h-screen z-20"
                 >
-                    <div className="text-xl font-semibold uppercase bg-primary text-white py-10 m-6 rounded-3xl">
+                    <div className="text-xl font-semibold bg-primary text-white py-10 m-6 rounded-3xl">
                         <ul className="flex flex-col items-center gap-10">
-                            <li><a href="/">Home</a></li>
-                            <li><a href="/">Products</a></li>
-                            <li><a href="/">My Orders</a></li>
-                            <li><a href="/">About</a></li>
-                            <li><a href="/">Contact</a></li>
+                            {menuItems.map((item, index) => (
+                                <li key={index}>
+                                    <a href={item.link}>{item.title}</a>
+                                </li>
+                            ))}
                             {user ? (
                                 <button
                                     className="px-6 py-2 bg-white text-red-600 rounded-xl hover:bg-red-700 transition duration-300"

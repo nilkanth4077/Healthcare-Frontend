@@ -10,15 +10,33 @@ export default function Navigation() {
     const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
+    const user = JSON.parse(localStorage.getItem("user"));
 
-    const NavbarMenu = [
-        { id: 1, title: "Home", link: "/" },
-        { id: 2, title: "Video Call", link: "/" },
-        { id: 3, title: "Book Appointment", link: "/book-appointment" },
-        { id: 4, title: "About", link: "/" },
-        { id: 5, title: "Contact", link: "/" },
-    ];
+    const menuConfig = {
+        USER: [
+            { title: "Home", link: "/" },
+            { title: "Products", link: "/" },
+            { title: "My Orders", link: "/" },
+            { title: "About", link: "/" },
+            { title: "Contact", link: "/" },
+        ],
+        DOCTOR: [
+            { title: "Dashboard", link: "/doctor-dashboard" },
+            { title: "My Appointments", link: "/" },
+            { title: "Patients", link: "/" },
+            { title: "Profile", link: "/" },
+        ],
+        ADMIN: [
+            { title: "Admin Dashboard", link: "/admin-dashboard" },
+            { title: "Manage Doctors", link: "/" },
+            { title: "Manage Users", link: "/" },
+            { title: "Settings", link: "/" },
+        ],
+    };
+
+    const role = user?.role || "USER";
+
+    const NavbarMenu = menuConfig[role];
 
     const handleLogout = () => {
         localStorage.removeItem("token");
