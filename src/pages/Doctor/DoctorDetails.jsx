@@ -41,12 +41,11 @@ const DoctorDetails = () => {
 
                 if (response.data.statusCode === 200) {
                     setDoctor(response.data.data);
-                    console.log("Doc data: ". response.data.data)
+                    console.log("Doc data: ", response.data.data)
                 } else {
                     toast.error(response.data.message || "Failed to fetch doctor.");
                 }
             } catch (error) {
-                console.error(error);
                 toast.error("Something went wrong while fetching doctor.");
             } finally {
                 setLoading(false);
