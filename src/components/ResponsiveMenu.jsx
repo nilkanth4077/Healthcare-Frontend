@@ -45,23 +45,23 @@ const ResponsiveMenu = ({ open }) => {
 
     const menuConfig = {
         USER: [
-            { title: "Home", link: "/" },
-            { title: "Products", link: "/" },
-            { title: "My Orders", link: "/" },
-            { title: "About", link: "/" },
-            { title: "Contact", link: "/" },
+            { id: 1, title: "Home", link: "/" },
+            { id: 2, title: "Book Appointment", link: "/book-appointment" },
+            { id: 3, title: "Video Call", link: "/" },
+            { id: 4, title: "About", link: "/" },
+            { id: 5, title: "Contact", link: "/" },
         ],
         DOCTOR: [
-            { title: "Dashboard", link: "/doctor-dashboard" },
-            { title: "My Appointments", link: "/doctor-dashboard" },
-            { title: "Patients", link: "/doctor-dashboard" },
-            { title: "Profile", link: "/doctor-dashboard" },
+            { id: 1, title: "Dashboard", link: "/doctor-dashboard" },
+            { id: 2, title: "My Appointments", link: "/doctor-dashboard" },
+            { id: 3, title: "Patients", link: "/doctor-dashboard" },
+            { id: 4, title: "Profile", link: "/doctor-dashboard" },
         ],
         ADMIN: [
-            { title: "Admin Dashboard", link: "/admin-dashboard" },
-            { title: "Manage Doctors", link: "/admin-dashboard" },
-            { title: "Manage Users", link: "/admin-dashboard" },
-            { title: "Settings", link: "/admin-dashboard" },
+            { id: 1, title: "Admin Dashboard", link: "/admin-dashboard" },
+            { id: 2, title: "Manage Doctors", link: "/admin-dashboard" },
+            { id: 3, title: "Manage Users", link: "/admin-dashboard" },
+            { id: 4, title: "Settings", link: "/admin-dashboard" },
         ],
     };
 

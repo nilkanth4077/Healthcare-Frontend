@@ -6,11 +6,13 @@ import DoctorList from "./DoctorList";
 import Navbar from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import BaseUrl from "../../reusables/BaseUrl";
+import DoctorDetailsModal from "./DoctorDetailsModal";
 
 const DoctorDetails = () => {
     const navigate = useNavigate();
     const [doctor, setDoctor] = useState({});
     const [loading, setLoading] = useState(true);
+    const [isModalOpen, setModalOpen] = useState(false);
     const { docId } = useParams();
 
     useEffect(() => {
@@ -39,6 +41,7 @@ const DoctorDetails = () => {
 
                 if (response.data.statusCode === 200) {
                     setDoctor(response.data.data);
+                    console.log("Doc data: ". response.data.data)
                 } else {
                     toast.error(response.data.message || "Failed to fetch doctor.");
                 }
@@ -70,33 +73,41 @@ const DoctorDetails = () => {
                     </div>
                 ) : (
                     <>
-                        <table className="min-w-full  bg-white shadow-md rounded-lg overflow-hidden">
+                        <table className="min-w-full  bg-white shadow-md overflow-hidden">
                             <tbody>
                                 <tr>
-                                    <th className="m-0 text-center">Name</th>
-                                    <td className="py-3 text-left">{doctor.firstName} {doctor.lastName}</td>
+                                    <th className="w-1/4 text-center border border-gray-500 py-2">First Name</th>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.firstName}</td>
                                 </tr>
                                 <tr>
-                                    <th className="text-center">Email</th>
-                                    <td className="py-3 text-left">{doctor.email}</td>
+                                    <th className="w-1/4 text-center border border-gray-500 py-2">Last Name</th>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.lastName}</td>
                                 </tr>
                                 <tr>
-                                    <th className="text-center">Verification Status</th>
-                                    <td className="py-3 text-left">{doctor.verificationStatus}</td>
+                                    <th className="w-1/4 text-center border border-gray-500 py-2">Email</th>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.email}</td>
                                 </tr>
                                 <tr>
-                                    <th className="text-center">Speciality</th>
-                                    <td className="py-3 text-left">{doctor.specialization}</td>
+                                    <th className="w-1/4 text-center border border-gray-500 py-2">Verification Status</th>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.verificationStatus}</td>
                                 </tr>
                                 <tr>
-                                    <th className="text-center">Mobile</th>
-                                    <td className="py-3 text-left">{doctor.mobile}</td>
+                                    <th className="w-1/4 text-center border border-gray-500 py-2">Speciality</th>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.specialization}</td>
+                                </tr>
+                                <tr>
+                                    <th className="w-1/4 text-center border border-gray-500 py-2">Mobile</th>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.mobile}</td>
+                                </tr>
+                                <tr>
+                                    <th className="w-1/4 text-center border border-gray-500 py-2">Document Size</th>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.documentSize}</td>
                                 </tr>
                             </tbody>
                         </table>
                         {doctor.document && (
                             <div className="bg-white shadow-md rounded-lg mt-4 p-4">
-                                <h3 className="text-center font-semibold mb-2">Document</h3>
+                                <h3 className="text-center text-2xl font-bold mb-2">Document</h3>
                                 <iframe
                                     title="Doctor Document"
                                     src={`data:application/pdf;base64,${doctor.document}`}
@@ -105,6 +116,13 @@ const DoctorDetails = () => {
                                 />
                             </div>
                         )}
+                        <div className="p-6 flex justify-center">
+                            <DoctorDetailsModal
+                                isOpen={isModalOpen}
+                                onClose={() => setModalOpen(false)}
+                                doctor={doctor}
+                            />
+                        </div>
                     </>
                 )}
             </div>
