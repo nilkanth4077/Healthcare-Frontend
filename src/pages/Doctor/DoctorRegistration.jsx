@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
@@ -8,6 +8,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function DoctorRegistration() {
 
+    const fileInputRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +24,9 @@ export default function DoctorRegistration() {
         specialization: "",
         documentFile: null,
     });
+    if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+    }
 
     useEffect(() => {
 
@@ -269,6 +273,7 @@ export default function DoctorRegistration() {
                                 type="file"
                                 name="documentFile"
                                 accept=".pdf"
+                                ref={fileInputRef}
                                 onChange={(e) => handleChange(e)}
                                 required
                                 className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
