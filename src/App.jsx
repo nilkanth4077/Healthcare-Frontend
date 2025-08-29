@@ -32,6 +32,8 @@ import AppointmentDetails from './pages/Patient/AppointmentDetails';
 import AdminDashHome from './pages/Admin/AdminDashHome';
 import DoctorListPage from './pages/Doctor/DoctorListPage';
 import DoctorDetails from './pages/Doctor/DoctorDetails';
+import DocSlotManagement from './pages/Doctor/DocSlotManagement';
+import SlotDetails from './pages/Doctor/SlotDetails';
 
 
 
@@ -53,6 +55,8 @@ function App() {
           <Route path='/admin-dash-home' element={<AdminDashHome />} />
           <Route path='/manage-doctors' element={<DoctorListPage />} />
           <Route path='/doctor/:docId' element={<DoctorDetails />} />
+          <Route path='/slot/:slotId' element={<SlotDetails />} />
+          <Route path='/doc-slot-management' element={<DocSlotManagement />} />
           {/* <Route path="/datetimepicker" element={<DateTimePicker />} />
           <Route path="/docreg" element={<Doctorreg />} />
           <Route path="/patientreg" element={<Patientreg />} />

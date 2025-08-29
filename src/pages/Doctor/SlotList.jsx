@@ -4,17 +4,20 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import BaseUrl from "../../reusables/BaseUrl";
 
-const DoctorList = ({ doctors, setDoctors }) => {
+const SlotList = ({ slots, setSlots }) => {
 
     const navigate = useNavigate();
+    var slotId = null;
 
     const handleDetails = (item) => {
-        const docId = item.id;
-        navigate(`/doctor/${docId}`, { state: { docId } });
+        slotId = item.id;
+        navigate(`/slot/${slotId}`, { state: { slotId } });
     };
 
     const token = localStorage.getItem("token");
     const userString = localStorage.getItem("user");
+
+    // console.log("Slots from SlotList: ", slots);
 
     if (!token || !userString) {
         toast.error("Please login first.");
@@ -22,30 +25,31 @@ const DoctorList = ({ doctors, setDoctors }) => {
         return;
     }
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (slotId) => {
+        console.log("Slot Id: ", slotId)
         try {
             const response = await axios.delete(
-                `${BaseUrl}/admin/delete/doctor`,
+                `${BaseUrl}/slot/delete`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                     params: {
-                        id: id,
+                        slotId: slotId,
                     }
                 }
             );
 
             if (response.data.statusCode === 200) {
-                // console.log("Doctor deleted with id: ", response.data.data.id);
-                toast.success("Doctor deleted with id: " + response.data.data.id);
-                setDoctors(prev => prev.filter(doc => doc.id !== id)); // Remove from local state
+                console.log("Slot deleted with id: ", slotId);
+                toast.success("Slot deleted with id: " + response.data.data.id);
+                setSlots(prev => prev.filter(slot => slot.id !== slotId)); // Remove from local state
             } else {
-                toast.error(response.data.message || "Failed to delete doctor.");
+                toast.error(response.data.message || "Failed to delete slot.");
             }
         } catch (error) {
             console.error(error);
-            toast.error("Something went wrong while deleting doctor.");
+            toast.error(error);
         }
     };
 
@@ -54,29 +58,27 @@ const DoctorList = ({ doctors, setDoctors }) => {
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-blue-600 text-white">
                     <tr>
-                        <th className="py-3 px-6 text-left">Doctor Id</th>
-                        <th className="py-3 px-6 text-left">Name</th>
-                        <th className="py-3 px-6 text-left">Email</th>
-                        <th className="py-3 px-6 text-left">Mobile</th>
-                        <th className="py-3 px-6 text-left">Specialization</th>
-                        <th className="py-3 px-6 text-left">Verification Status</th>
-                        <th className="py-3 px-6 text-left">Action</th>
+                        <th className="py-3 px-6 text-left">Slot Id</th>
+                        <th className="py-3 px-6 text-left">Type</th>
+                        <th className="py-3 px-6 text-left">Date</th>
+                        <th className="py-3 px-6 text-left">Start Time</th>
+                        <th className="py-3 px-6 text-left">End Time</th>
+                        <th className="py-3 px-6 text-left">Available</th>
+                        <th className="py-3 px-6 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody className="text-gray-700">
-                    {doctors.map((item, index) => (
+                    {slots.map((item, index) => (
                         <tr
                             key={index}
                             className={`border-t ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
                         >
                             <td className="py-3 px-6">{item.id}</td>
-                            <td className="py-3 px-6 whitespace-nowrap">
-                                {item.doctor.firstName} {item.doctor.lastName}
-                            </td>
-                            <td className="py-3 px-6">{item.doctor.email}</td>
-                            <td className="py-3 px-6">{item.doctor.mobile}</td>
-                            <td className="py-3 px-6">{item.specialization}</td>
-                            <td className="py-3 px-6">{item.verificationStatus}</td>
+                            <td className="py-3 px-6">{item.slotType}</td>
+                            <td className="py-3 px-6">{item.startTime.toString().substring(0, 10)}</td>
+                            <td className="py-3 px-6">{item.startTime.toString().substring(11, 16)}</td>
+                            <td className="py-3 px-6">{item.endTime.toString().substring(11, 16)}</td>
+                            <td className="py-3 px-6">{item.available.toString()}</td>
                             <td className="py-3 px-6 text-center whitespace-nowrap">
 
                                 <div className="hidden sm:flex gap-2 justify-center">
@@ -125,4 +127,4 @@ const DoctorList = ({ doctors, setDoctors }) => {
     );
 };
 
-export default DoctorList;
+export default SlotList;

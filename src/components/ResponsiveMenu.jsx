@@ -56,6 +56,7 @@ const ResponsiveMenu = ({ open }) => {
             { id: 2, title: "My Appointments", link: "/doctor-dashboard" },
             { id: 3, title: "Patients", link: "/doctor-dashboard" },
             { id: 4, title: "Profile", link: "/doctor-dashboard" },
+            { id: 5, title: "Slots", link: "/doc-slot-management" },
         ],
         ADMIN: [
             { id: 1, title: "Admin Dashboard", link: "/admin-dashboard" },
