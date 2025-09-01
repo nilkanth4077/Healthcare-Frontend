@@ -49,6 +49,7 @@ const Login = () => {
             });
 
             const { user, token } = response.data.data;
+            // console.log("Login Response:", response.data);
 
             // Save token & user
             localStorage.setItem("token", token);
@@ -65,9 +66,8 @@ const Login = () => {
                 toast.success("Login Successful");
                 navigate("/");
             }
-
         } catch (err) {
-            toast.error("Invalid credentials");
+            toast.error(err.response?.data?.message || "Invalid credentials");
         } finally {
             setLoading(false);
         }

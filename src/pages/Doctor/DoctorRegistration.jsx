@@ -280,7 +280,7 @@ export default function DoctorRegistration() {
                                 className="w-full p-2 rounded bg-white text-mtext focus:outline-none focus:ring-2 focus:ring-back"
                             />
                             <span className="absolute -top-8 left-0 w-max bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                Only PDF is allowed
+                                Only PDF (Maximum size: 2MB)
                             </span>
                         </div>
 
