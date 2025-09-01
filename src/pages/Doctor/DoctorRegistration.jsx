@@ -100,7 +100,9 @@ export default function DoctorRegistration() {
                 },
             });
 
-            toast.success("Doctor registered successfully!");
+            toast.success("Registration Successful, You can login after your verification", {
+                autoClose: 5000,
+            });
 
             setFormData({
                 firstName: "",
