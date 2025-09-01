@@ -100,7 +100,7 @@ export default function DoctorRegistration() {
                 },
             });
 
-            toast.success("Registration Successful, You can login after your verification", {
+            toast.success("Registration successful. You’ll receive an email once verified to log in.", {
                 autoClose: 5000,
             });
 
