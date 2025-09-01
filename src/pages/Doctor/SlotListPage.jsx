@@ -88,10 +88,6 @@ const SlotListPage = () => {
     return (
         <>
             <div className="min-h-screen bg-gray-100 px-4 py-8">
-                <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-                    Slot List
-                </h2>
-
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-10">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary border-solid"></div>

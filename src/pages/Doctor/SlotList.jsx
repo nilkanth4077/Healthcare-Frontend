@@ -10,6 +10,7 @@ const SlotList = ({ slots, setSlots }) => {
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [formData, setFormData] = useState({});
     const [showModal, setShowModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const navigate = useNavigate();
     var slotId = null;
@@ -137,8 +138,52 @@ const SlotList = ({ slots, setSlots }) => {
         return 0;
     });
 
+    const formatDate = (dateStr) => {
+        if (!dateStr) return "";
+        return dateStr.substring(0, 10).split("-").reverse().join("-");
+    };
+
+    const formatTime = (dateStr) => {
+        if (!dateStr) return "";
+        return dateStr.substring(11, 16);
+    };
+
+    // Filtering
+    const filteredData = sortedSlots.filter((item) => {
+        const search = searchQuery.toLowerCase();
+
+        // Convert values for comparison
+        const id = item.id?.toString() || "";
+        const slotId = item.slotId?.toString() || "";
+        const slotType = item.slotType?.toLowerCase() || "";
+        const date = formatDate(item.startTime); // "22-09-2025"
+        const startTime = formatTime(item.startTime); // "10:30"
+        const endTime = formatTime(item.endTime); // "12:30"
+
+        // Match against any of them
+        return (
+            id.includes(search) ||
+            slotId.includes(search) ||
+            slotType.includes(search) ||
+            date.includes(search) ||
+            startTime.includes(search) ||
+            endTime.includes(search) ||
+            (item.available ? "available" : "unavailable").toLowerCase().startsWith(search.toLowerCase())
+        );
+    });
+
     return (
         <div className="overflow-x-auto mb-20">
+            <div className="flex justify-between items-center mb-3">
+                <h2 className="text-2xl font-bold ml-2">Slot List</h2>
+                <input
+                    type="text"
+                    placeholder="Search slots..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="border rounded px-3 py-2 w-64"
+                />
+            </div>
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-blue-600 text-white">
                     <tr>
@@ -172,20 +217,16 @@ const SlotList = ({ slots, setSlots }) => {
                     </tr>
                 </thead>
                 <tbody className="text-gray-700">
-                    {sortedSlots.map((item, index) => (
+                    {filteredData.map((item, index) => (
                         <tr
                             key={index}
                             className={`border-t ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
                         >
                             <td className="py-3 px-6 whitespace-nowrap">{item.id}</td>
                             <td className="py-3 px-6 whitespace-nowrap">{item.slotType}</td>
-                            <td className="py-3 px-6 whitespace-nowrap">
-                                {item.startTime
-                                    ? item.startTime.toString().substring(0, 10).split("-").reverse().join("-")
-                                    : ""}
-                            </td>
-                            <td className="py-3 px-6 whitespace-nowrap">{item.startTime.toString().substring(11, 16)}</td>
-                            <td className="py-3 px-6 whitespace-nowrap">{item.endTime.toString().substring(11, 16)}</td>
+                            <td className="py-3 px-6 whitespace-nowrap">{formatDate(item.startTime)}</td>
+                            <td className="py-3 px-6 whitespace-nowrap">{formatTime(item.startTime)}</td>
+                            <td className="py-3 px-6 whitespace-nowrap">{formatTime(item.endTime)}</td>
                             <td className="py-3 px-6 whitespace-nowrap">
                                 <span
                                     className={`px-2 py-1 text-xs font-semibold rounded-full ${item.available ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
