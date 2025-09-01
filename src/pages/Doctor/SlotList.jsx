@@ -1,21 +1,26 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import BaseUrl from "../../reusables/BaseUrl";
 
 const SlotList = ({ slots, setSlots }) => {
 
+    const [selectedSlot, setSelectedSlot] = useState(null);
+    const [formData, setFormData] = useState({});
+    const [showModal, setShowModal] = useState(false);
+
     const navigate = useNavigate();
     var slotId = null;
 
-    const handleDetails = (item) => {
-        slotId = item.id;
-        navigate(`/slot/${slotId}`, { state: { slotId } });
-    };
+    // const handleDetails = (item) => {
+    //     slotId = item.id;
+    //     navigate(`/slot/${slotId}`, { state: { slotId } });
+    // };
 
     const token = localStorage.getItem("token");
     const userString = localStorage.getItem("user");
+    const user = userString ? JSON.parse(userString) : null;
 
     // console.log("Slots from SlotList: ", slots);
 
@@ -42,7 +47,7 @@ const SlotList = ({ slots, setSlots }) => {
 
             if (response.data.statusCode === 200) {
                 console.log("Slot deleted with id: ", slotId);
-                toast.success("Slot deleted with id: " + response.data.data.id);
+                toast.success("Slot deleted successfully");
                 setSlots(prev => prev.filter(slot => slot.id !== slotId)); // Remove from local state
             } else {
                 toast.error(response.data.message || "Failed to delete slot.");
@@ -50,6 +55,62 @@ const SlotList = ({ slots, setSlots }) => {
         } catch (error) {
             console.error(error);
             toast.error(error);
+        }
+    };
+
+    const handleUpdate = async (slot) => {
+        setSelectedSlot(slot);
+        // console.log("Selected Slot: ", slot);
+        setFormData({
+            slotId: slot.id,
+            newStartTime: slot.startTime.substring(0, 16),
+            slotType: slot.slotType,
+            available: slot.available,
+        });
+        setShowModal(true);
+    };
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
+
+    const handleSubmit = async () => {
+        const payload = { slotId: formData.slotId };
+
+        if (formData.newStartTime !== selectedSlot.startTime.substring(0, 16)) {
+            payload.newStartTime = formData.newStartTime;
+        }
+        if (formData.slotType !== selectedSlot.slotType) {
+            payload.slotType = formData.slotType;
+        }
+        if (formData.available !== selectedSlot.available) {
+            payload.available = formData.available;
+        }
+
+        try {
+            const response = await axios.put(`${BaseUrl}/slot/update`, payload, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (response.data.statusCode === 200) {
+                toast.success("Slot updated successfully");
+
+                setSlots((prev) =>
+                    prev.map((slot) =>
+                        slot.id === formData.slotId ? { ...slot, ...response.data.data } : slot
+                    )
+                );
+                setShowModal(false);
+            } else {
+                toast.error(response.data.data.message || "Failed to update slot.");
+            }
+        } catch (error) {
+            // console.error(error.response.data.message);
+            toast.error(error.response.data.message || "Something went wrong while updating slot.");
         }
     };
 
@@ -82,11 +143,17 @@ const SlotList = ({ slots, setSlots }) => {
                             <td className="py-3 px-6 text-center whitespace-nowrap">
 
                                 <div className="hidden sm:flex gap-2 justify-center">
-                                    <button
+                                    {/* <button
                                         className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
                                         onClick={() => handleDetails(item)}
                                     >
                                         Details
+                                    </button> */}
+                                    <button
+                                        className="bg-green-600 hover:bg-green-500 text-white px-3 py-1 rounded text-sm"
+                                        onClick={() => handleUpdate(item)}
+                                    >
+                                        Update
                                     </button>
                                     <button
                                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
@@ -103,11 +170,17 @@ const SlotList = ({ slots, setSlots }) => {
                                             Actions
                                         </summary>
                                         <div className="relative z-10 mt-2 w-32 bg-white rounded shadow-lg border border-gray-200">
-                                            <button
+                                            {/* <button
                                                 className="block w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
                                                 onClick={() => handleDetails(item)}
                                             >
                                                 Details
+                                            </button> */}
+                                            <button
+                                                className="block w-full text-left px-4 py-2 text-sm text-green-600 hover:bg-green-100"
+                                                onClick={() => handleUpdate(item)}
+                                            >
+                                                Update
                                             </button>
                                             <button
                                                 className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
@@ -123,6 +196,74 @@ const SlotList = ({ slots, setSlots }) => {
                     ))}
                 </tbody>
             </table>
+
+            {showModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
+                        <h2 className="text-xl font-bold mb-4">Update Slot</h2>
+
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium">Slot ID</label>
+                            <input
+                                type="text"
+                                value={formData.slotId}
+                                disabled
+                                className="w-full border px-3 py-2 rounded bg-gray-100"
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium">Start Time</label>
+                            <input
+                                type="datetime-local"
+                                name="newStartTime"
+                                value={formData.newStartTime}
+                                onChange={handleChange}
+                                className="w-full border px-3 py-2 rounded"
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium">Slot Type</label>
+                            <select
+                                name="slotType"
+                                value={formData.slotType}
+                                onChange={handleChange}
+                                className="w-full border px-3 py-2 rounded"
+                            >
+                                <option value="ONLINE">ONLINE</option>
+                                <option value="OFFLINE">OFFLINE</option>
+                            </select>
+                        </div>
+
+                        <div className="mb-3 flex items-center">
+                            <input
+                                type="checkbox"
+                                name="available"
+                                checked={formData.available}
+                                onChange={handleChange}
+                                className="mr-2"
+                            />
+                            <label className="text-sm">Available</label>
+                        </div>
+
+                        <div className="flex justify-end gap-2">
+                            <button
+                                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                onClick={() => setShowModal(false)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                onClick={handleSubmit}
+                            >
+                                Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

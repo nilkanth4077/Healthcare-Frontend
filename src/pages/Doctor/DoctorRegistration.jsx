@@ -24,9 +24,6 @@ export default function DoctorRegistration() {
         specialization: "",
         documentFile: null,
     });
-    if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-    }
 
     useEffect(() => {
 
@@ -115,6 +112,10 @@ export default function DoctorRegistration() {
                 specialization: "",
                 documentFile: null,
             });
+
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
         } catch (err) {
             console.error(err);
             toast.error(err.response?.data?.message || "Registration failed");

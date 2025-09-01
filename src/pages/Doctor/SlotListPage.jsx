@@ -9,44 +9,81 @@ const SlotListPage = () => {
     const navigate = useNavigate();
     const [slots, setSlots] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [doctor, setDoctor] = useState({});
+
+    const token = localStorage.getItem("token");
+    const userString = localStorage.getItem("user");
+    const user = userString ? JSON.parse(userString) : null;
+
+    const fetchSlotsByDoctor = async () => {
+        try {
+            const response = await axios.get(
+                `${BaseUrl}/slot/doctor/${doctor.doctorId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.data.statusCode === 200) {
+                setSlots(response.data.data);
+            } else {
+                toast.error(response.data.message || "Failed to fetch slots.");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong while fetching slots.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchDoctorByUserId = async () => {
+        try {
+            const response = await axios.get(
+                `${BaseUrl}/doctor/by-user-id`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    params: {
+                        userId: user.id,
+                    }
+                }
+            );
+
+            if (response.data.statusCode === 200) {
+                setDoctor(response.data.data);
+                // console.log("Doc data: ", response.data.data)
+            } else {
+                toast.error(response.data.message || "Failed to fetch doctor.");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong while fetching doctor.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        const userString = localStorage.getItem("user");
-        const doctorId = 17;
 
         if (!token || !userString) {
             toast.error("Please login first.");
             navigate("/login");
             return;
         }
-
-        const fetchSlotsByDoctor = async () => {
-            try {
-                const response = await axios.get(
-                    `${BaseUrl}/slot/doctor/${doctorId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-
-                if (response.data.statusCode === 200) {
-                    setSlots(response.data.data);
-                } else {
-                    toast.error(response.data.message || "Failed to fetch slots.");
-                }
-            } catch (error) {
-                console.error(error);
-                toast.error("Something went wrong while fetching slots.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchSlotsByDoctor();
+        fetchDoctorByUserId();
     }, [navigate]);
+
+    useEffect(() => {
+        if (doctor.doctorId) {
+            fetchSlotsByDoctor(doctor.doctorId);
+        }
+    }, [doctor]);
+
+    // console.log("Doc from doctor: ", doctor)
 
     return (
         <>
