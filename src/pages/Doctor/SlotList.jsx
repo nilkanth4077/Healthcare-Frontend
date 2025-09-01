@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import BaseUrl from "../../reusables/BaseUrl";
 import { LuArrowUpDown } from "react-icons/lu";
+import AddSlots from "./AddSlots";
 
 const SlotList = ({ slots, setSlots }) => {
 
@@ -11,6 +12,10 @@ const SlotList = ({ slots, setSlots }) => {
     const [formData, setFormData] = useState({});
     const [showModal, setShowModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
+
+    const openAddSlotModal = () => setIsOpen(true);
+    const closeAddSlotModal = () => setIsOpen(false);
 
     const navigate = useNavigate();
     var slotId = null;
@@ -33,7 +38,7 @@ const SlotList = ({ slots, setSlots }) => {
     }
 
     const handleDelete = async (slotId) => {
-        console.log("Slot Id: ", slotId)
+        // console.log("Slot Id: ", slotId)
         try {
             const response = await axios.delete(
                 `${BaseUrl}/slot/delete`,
@@ -48,7 +53,7 @@ const SlotList = ({ slots, setSlots }) => {
             );
 
             if (response.data.statusCode === 200) {
-                console.log("Slot deleted with id: ", slotId);
+                // console.log("Slot deleted with id: ", slotId);
                 toast.success("Slot deleted successfully");
                 setSlots(prev => prev.filter(slot => slot.id !== slotId)); // Remove from local state
             } else {
@@ -145,14 +150,16 @@ const SlotList = ({ slots, setSlots }) => {
 
     const formatTime = (dateStr) => {
         if (!dateStr) return "";
-        return dateStr.substring(11, 16);
+        const [hourStr, minute] = dateStr.substring(11, 16).split(":");
+        let hour = parseInt(hourStr, 10);
+        const ampm = hour >= 12 ? "PM" : "AM";
+        hour = hour % 12 || 12;
+        return `${hour}:${minute} ${ampm}`;
     };
 
-    // Filtering
     const filteredData = sortedSlots.filter((item) => {
         const search = searchQuery.toLowerCase();
 
-        // Convert values for comparison
         const id = item.id?.toString() || "";
         const slotId = item.slotId?.toString() || "";
         const slotType = item.slotType?.toLowerCase() || "";
@@ -160,7 +167,6 @@ const SlotList = ({ slots, setSlots }) => {
         const startTime = formatTime(item.startTime); // "10:30"
         const endTime = formatTime(item.endTime); // "12:30"
 
-        // Match against any of them
         return (
             id.includes(search) ||
             slotId.includes(search) ||
@@ -175,7 +181,31 @@ const SlotList = ({ slots, setSlots }) => {
     return (
         <div className="overflow-x-auto mb-20">
             <div className="flex justify-between items-center mb-3">
-                <h2 className="text-2xl font-bold ml-2">Slot List</h2>
+                {/* <h2 className="text-2xl font-bold ml-2">Slot List</h2> */}
+                <button
+                    className="bg-blue-600 text-white font-semibold p-2 rounded-lg"
+                    onClick={openAddSlotModal}
+                >
+                    Add Slots
+                </button>
+
+                {/* Modal */}
+                {isOpen && (
+                    <div className="fixed inset-0 z-50 flex p-4 items-center justify-center bg-white bg-opacity-50">
+                        <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl relative overflow-y-auto max-h-[90vh]">
+
+                            <button
+                                className="absolute top-3 right-3 text-white bg-red-600 rounded-full px-2 py-1 hover:bg-red-700 transition"
+                                onClick={closeAddSlotModal}
+                            >
+                                ✕
+                            </button>
+
+                            <AddSlots closeModal={closeAddSlotModal} />
+                        </div>
+                    </div>
+                )}
+
                 <input
                     type="text"
                     placeholder="Search slots..."

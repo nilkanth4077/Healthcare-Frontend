@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import BaseUrl from "../../reusables/BaseUrl";
 import SlotList from "./SlotList";
+import { fetchDoctorByUserId } from "../../services/doctorApi";
 
 const SlotListPage = () => {
     const navigate = useNavigate();
@@ -39,29 +40,19 @@ const SlotListPage = () => {
         }
     };
 
-    const fetchDoctorByUserId = async () => {
+    const getDoctorByUserId = async () => {
         try {
-            const response = await axios.get(
-                `${BaseUrl}/doctor/by-user-id`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    params: {
-                        userId: user.id,
-                    }
-                }
-            );
+            const response = await fetchDoctorByUserId(token, user.id);
 
-            if (response.data.statusCode === 200) {
-                setDoctor(response.data.data);
-                // console.log("Doc data: ", response.data.data)
+            if (response.statusCode === 200) {
+                setDoctor(response.data);
+                // console.log("Doc data: ", response.data)
             } else {
-                toast.error(response.data.message || "Failed to fetch doctor.");
+                toast.error(response.message || "Failed to fetch doctor.");
             }
         } catch (error) {
             console.error(error);
-            toast.error("Something went wrong while fetching doctor.");
+            toast.error(error.response.message || "Something went wrong while fetching doctor.");
         } finally {
             setLoading(false);
         }
@@ -74,7 +65,7 @@ const SlotListPage = () => {
             navigate("/login");
             return;
         }
-        fetchDoctorByUserId();
+        getDoctorByUserId();
     }, [navigate]);
 
     useEffect(() => {
