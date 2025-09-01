@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import BaseUrl from "../../reusables/BaseUrl";
+import { LuArrowUpDown } from "react-icons/lu";
 
 const SlotList = ({ slots, setSlots }) => {
 
@@ -114,32 +115,85 @@ const SlotList = ({ slots, setSlots }) => {
         }
     };
 
+    const [sortConfig, setSortConfig] = useState({ key: "id", direction: "asc" });
+
+    const handleSort = (key) => {
+        setSortConfig((prev) => {
+            if (prev.key === key) {
+                // toggle asc/desc if same column
+                return { key, direction: prev.direction === "asc" ? "desc" : "asc" };
+            }
+            return { key, direction: "asc" };
+        });
+    };
+
+    const sortedSlots = [...slots].sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+            return sortConfig.direction === "asc" ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+            return sortConfig.direction === "asc" ? 1 : -1;
+        }
+        return 0;
+    });
+
     return (
         <div className="overflow-x-auto mb-20">
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-blue-600 text-white">
                     <tr>
-                        <th className="py-3 px-6 text-left">Slot Id</th>
-                        <th className="py-3 px-6 text-left">Type</th>
-                        <th className="py-3 px-6 text-left">Date</th>
-                        <th className="py-3 px-6 text-left">Start Time</th>
-                        <th className="py-3 px-6 text-left">End Time</th>
-                        <th className="py-3 px-6 text-left">Available</th>
+                        <th
+                            className="py-3 px-6 text-left cursor-pointer whitespace-nowrap"
+                            onClick={() => handleSort("id")}
+                        >
+                            Slot Id {sortConfig.key === "id" ? (sortConfig.direction === "asc" ? "↑" : "↓") : <LuArrowUpDown className="inline w-4 h-4 ml-1" />}
+                        </th>
+                        <th
+                            className="py-3 px-6 text-left cursor-pointer whitespace-nowrap"
+                            onClick={() => handleSort("slotType")}
+                        >
+                            Type {sortConfig.key === "slotType" ? (sortConfig.direction === "asc" ? "↑" : "↓") : <LuArrowUpDown className="inline w-4 h-4 ml-1" />}
+                        </th>
+                        <th
+                            className="py-3 px-6 text-left cursor-pointer whitespace-nowrap"
+                            onClick={() => handleSort("startTime")}
+                        >
+                            Date {sortConfig.key === "startTime" ? (sortConfig.direction === "asc" ? "↑" : "↓") : <LuArrowUpDown className="inline w-4 h-4 ml-1" />}
+                        </th>
+                        <th className="py-3 px-6 text-left whitespace-nowrap">Start Time</th>
+                        <th className="py-3 px-6 text-left whitespace-nowrap">End Time</th>
+                        <th
+                            className="py-3 px-6 text-left cursor-pointer whitespace-nowrap"
+                            onClick={() => handleSort("available")}
+                        >
+                            Available {sortConfig.key === "available" ? (sortConfig.direction === "asc" ? "↑" : "↓") : <LuArrowUpDown className="inline w-4 h-4 ml-1" />}
+                        </th>
                         <th className="py-3 px-6 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody className="text-gray-700">
-                    {slots.map((item, index) => (
+                    {sortedSlots.map((item, index) => (
                         <tr
                             key={index}
                             className={`border-t ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
                         >
-                            <td className="py-3 px-6">{item.id}</td>
-                            <td className="py-3 px-6">{item.slotType}</td>
-                            <td className="py-3 px-6">{item.startTime.toString().substring(0, 10)}</td>
-                            <td className="py-3 px-6">{item.startTime.toString().substring(11, 16)}</td>
-                            <td className="py-3 px-6">{item.endTime.toString().substring(11, 16)}</td>
-                            <td className="py-3 px-6">{item.available.toString()}</td>
+                            <td className="py-3 px-6 whitespace-nowrap">{item.id}</td>
+                            <td className="py-3 px-6 whitespace-nowrap">{item.slotType}</td>
+                            <td className="py-3 px-6 whitespace-nowrap">
+                                {item.startTime
+                                    ? item.startTime.toString().substring(0, 10).split("-").reverse().join("-")
+                                    : ""}
+                            </td>
+                            <td className="py-3 px-6 whitespace-nowrap">{item.startTime.toString().substring(11, 16)}</td>
+                            <td className="py-3 px-6 whitespace-nowrap">{item.endTime.toString().substring(11, 16)}</td>
+                            <td className="py-3 px-6 whitespace-nowrap">
+                                <span
+                                    className={`px-2 py-1 text-xs font-semibold rounded-full ${item.available ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                                        }`}
+                                >
+                                    {item.available ? "Available" : "Unavailable"}
+                                </span>
+                            </td>
                             <td className="py-3 px-6 text-center whitespace-nowrap">
 
                                 <div className="hidden sm:flex gap-2 justify-center">
