@@ -48,7 +48,6 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
 
     // console.log("Slots just before mapping: ", slots);
 
-    // Function to format date as "04 September 2025 (Thursday)"
     const formatFullDate = (dateString) => {
         const date = new Date(dateString);
 
@@ -57,15 +56,13 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
         const year = date.getFullYear();
         const weekday = date.toLocaleDateString("en-GB", { weekday: "long" });
 
-        return `${day} ${month} ${year} (${weekday})`;
+        return `${day} ${month} ${year} (${weekday})`; // "04 September 2025 (Thursday)"
     };
 
-    // Get unique formatted dates
     const uniqueDates = [
         ...new Set(slots.map((slot) => formatFullDate(slot.startTime))),
     ];
 
-    // Filter slots by selected date
     const filteredSlots = slots.filter(
         (slot) => formatFullDate(slot.startTime) === selectedDate
     );
@@ -90,30 +87,23 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
                     <div>
                         <label className="block text-white text-2xl mb-2">
                             Select Slot
+                            {loading ? (
+                                <div className="flex items-center justify-center">
+                                    <svg className="animate-spin h-5 w-5 mr-2 text-mtext" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
+                                        <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
+                                    </svg>
+                                </div>
+                            ) : (
+                                ""
+                            )}
                         </label>
-
-                        {/* <select
-                            value={selectedSlot}
-                            onChange={(e) => setSelectedSlot(e.target.value)}
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            required
-                        >
-                            <option value="">-- Choose a Slot --</option>
-                            {slots.map((slot) => (
-                                <option key={slot.id} value={slot.id}>
-                                    {new Date(slot.startTime).toDateString().toString().substring()} (
-                                    {new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}-
-                                    {new Date(slot.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    )
-                                </option>
-                            ))}
-                        </select> */}
 
                         <select
                             value={selectedDate}
                             onChange={(e) => {
                                 setSelectedDate(e.target.value);
-                                setSelectedSlot(null); // reset when date changes
+                                setSelectedSlot(null);
                             }}
                             className="border rounded p-2 w-full"
                         >
