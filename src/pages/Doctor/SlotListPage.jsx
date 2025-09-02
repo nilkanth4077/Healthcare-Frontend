@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import BaseUrl from "../../reusables/BaseUrl";
 import SlotList from "./SlotList";
-import { fetchDoctorByUserId } from "../../services/doctorApi";
+import { fetchDoctorByUserId, getSlotsByDoctorId } from "../../services/doctorApi";
 
 const SlotListPage = () => {
     const navigate = useNavigate();
@@ -18,23 +18,15 @@ const SlotListPage = () => {
 
     const fetchSlotsByDoctor = async () => {
         try {
-            const response = await axios.get(
-                `${BaseUrl}/slot/doctor/${doctor.doctorId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            if (response.data.statusCode === 200) {
-                setSlots(response.data.data);
+            const response = await getSlotsByDoctorId(token, doctor.doctorId);
+            // console.log("Slots response: ", response)
+            if (response.statusCode === 200) {
+                setSlots(response.data);
             } else {
-                toast.error(response.data.message || "Failed to fetch slots.");
+                toast.error(response.message || "Failed to fetch slots.");
             }
         } catch (error) {
-            console.error(error);
-            toast.error("Something went wrong while fetching slots.");
+            toast.error(error.response?.message || "Something went wrong while fetching slots.");
         } finally {
             setLoading(false);
         }
@@ -52,7 +44,7 @@ const SlotListPage = () => {
             }
         } catch (error) {
             console.error(error);
-            toast.error(error.response.message || "Something went wrong while fetching doctor.");
+            toast.error(error.response?.message || "Something went wrong while fetching doctor.");
         } finally {
             setLoading(false);
         }
