@@ -48,15 +48,26 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
 
     // console.log("Slots just before mapping: ", slots);
 
+    // Function to format date as "04 September 2025 (Thursday)"
+    const formatFullDate = (dateString) => {
+        const date = new Date(dateString);
+
+        const day = date.toLocaleDateString("en-GB", { day: "2-digit" });
+        const month = date.toLocaleDateString("en-GB", { month: "long" });
+        const year = date.getFullYear();
+        const weekday = date.toLocaleDateString("en-GB", { weekday: "long" });
+
+        return `${day} ${month} ${year} (${weekday})`;
+    };
+
+    // Get unique formatted dates
     const uniqueDates = [
-        ...new Set(
-            slots.map((slot) => new Date(slot.startTime).toDateString())
-        ),
+        ...new Set(slots.map((slot) => formatFullDate(slot.startTime))),
     ];
 
     // Filter slots by selected date
     const filteredSlots = slots.filter(
-        (slot) => new Date(slot.startTime).toDateString() === selectedDate
+        (slot) => formatFullDate(slot.startTime) === selectedDate
     );
 
     const handleBook = () => {
