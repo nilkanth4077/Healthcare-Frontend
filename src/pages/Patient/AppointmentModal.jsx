@@ -85,10 +85,12 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
-                        <label className="block text-white text-2xl mb-2">
-                            Select Slot
+                        <label className="block text-white text-2xl mb-2 flex justify-between items-center">
+                            <div className="flex items-center justify-start">
+                                Select Slot
+                            </div>
                             {loading ? (
-                                <div className="flex items-center justify-center">
+                                <div className="flex items-center justify-end">
                                     <svg className="animate-spin h-5 w-5 mr-2 text-mtext" viewBox="0 0 24 24">
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
                                         <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
