@@ -29,3 +29,20 @@ export const getAllSpecializations = async () => {
         throw error;
     }
 }
+
+export const getSlotsByDoctorId = async (token, doctorId) => {
+    try {
+        const response = await axios.get(
+            `${BaseUrl}/slot/doctor/${doctorId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
