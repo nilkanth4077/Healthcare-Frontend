@@ -9,6 +9,7 @@ export default function DoctorDetailsModal({ doctor, onUpdate }) {
     const [isOpen, setIsOpen] = useState(false);
     const [file, setFile] = useState(null);
     const [formData, setFormData] = useState({});
+    const [loading, setLoading] = useState(false);
     const [specialities, setSpecialities] = useState([]);
     const navigate = useNavigate();
 
@@ -73,6 +74,8 @@ export default function DoctorDetailsModal({ doctor, onUpdate }) {
 
     const handleSubmit = async () => {
         try {
+            setLoading(true);
+
             if (!formData.doctorId || !token) {
                 toast.error("DoctorId and token are required");
                 return;
@@ -119,6 +122,8 @@ export default function DoctorDetailsModal({ doctor, onUpdate }) {
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong");
             console.error("Error updating doctor details: ", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -295,7 +300,30 @@ export default function DoctorDetailsModal({ doctor, onUpdate }) {
                                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
                                 onClick={handleSubmit}
                             >
-                                Update
+                                {loading ? (
+                                    <svg
+                                        className="animate-spin h-5 w-5 text-mtext"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        ></circle>
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8v8H4z"
+                                        ></path>
+                                    </svg>
+                                ) : (
+                                    "Update"
+                                )}
                             </button>
                         </div>
                     </div>
