@@ -129,7 +129,7 @@ export default function DoctorDetailsModal({ doctor, onUpdate }) {
 
     return (
         <div className="m-5">
-            {/* Update Button */}
+            
             <button
                 className="bg-blue-600 hover:bg-yellow-600 text-white px-4 py-2 rounded"
                 onClick={() => setIsOpen(true)}
