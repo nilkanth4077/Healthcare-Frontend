@@ -277,6 +277,7 @@ export default function DoctorDetailsModal({ doctor, onUpdate }) {
                             </label>
                             <input
                                 type="file"
+                                accept=".pdf"
                                 onChange={handleFileChange}
                                 className="border border-gray-300 rounded px-2 py-1 w-full"
                             />
