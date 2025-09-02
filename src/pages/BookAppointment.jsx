@@ -2,28 +2,21 @@ import React, { useEffect, useState } from "react";
 import Navigation from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import online from "../assets/images/online.jpg";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
-import BaseUrl from "../reusables/BaseUrl";
+import { getAllSpecializations } from "../services/doctorApi";
 
 function BookAppointment() {
     const navigate = useNavigate();
     const [specialities, setSpecialities] = useState([]);
     const [selectedSpeciality, setSelectedSpeciality] = useState("");
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        const userString = localStorage.getItem("user");
-        const user = JSON.parse(userString);
+    const token = localStorage.getItem("token");
+    const userString = localStorage.getItem("user");
+    const user = JSON.parse(userString);
 
-        if (!token) {
-            toast.error("Please login first");
-            navigate("/login");
-            return;
-        }
-
+    const getSpecialities = async () => {
         try {
             if (user.role !== "USER") {
                 toast.error("Access denied. Only patients can book appointments.");
@@ -31,26 +24,26 @@ function BookAppointment() {
                 return;
             }
 
-            axios
-                .get(`${BaseUrl}/speciality/all`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-                .then((res) => {
-                    setSpecialities(res.data.data);
-                })
-                .catch((err) => {
-                    toast.error("Error fetching specialities.");
-                    console.error(err);
-                });
+            const response = await getAllSpecializations();
+            // console.log("Response: ", response.data);
 
+            if (response.statusCode === 200) {
+                setSpecialities(response.data);
+            } else {
+                toast.error(response.message || "Failed to fetch specializations.");
+            }
         } catch (error) {
-            toast.error("Invalid session. Please login again.");
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            navigate("/login");
+            toast.error(error.response.message || "Something went wrong. Try again later");
         }
+    }
+
+    useEffect(() => {
+        if (!token) {
+            toast.error("Please login first");
+            navigate("/login");
+            return;
+        }
+        getSpecialities();
     }, []);
 
     const handleSubmit = () => {

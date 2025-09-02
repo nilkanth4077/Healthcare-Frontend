@@ -15,7 +15,6 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const existingToken = localStorage.getItem("token");
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -67,7 +66,7 @@ const Login = () => {
                 navigate("/");
             }
         } catch (err) {
-            toast.error(err.response?.data?.message || "Invalid credentials");
+            toast.error(err.response?.message || "Invalid credentials");
         } finally {
             setLoading(false);
         }

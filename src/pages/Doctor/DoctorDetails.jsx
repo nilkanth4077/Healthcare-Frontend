@@ -100,22 +100,21 @@ const DoctorDetails = () => {
                                 </tr>
                                 <tr>
                                     <th className="w-1/4 text-center border border-gray-500 py-2">Document Size</th>
-                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.documentSize}</td>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{(doctor.documentSize / 1024).toString().substring(0, 7)} KB</td>
                                 </tr>
                             </tbody>
                         </table>
                         {doctor.document && (
-                            <div className="bg-white shadow-md rounded-lg mt-4 p-4">
-                                <h3 className="text-center text-2xl font-bold mb-2">Document</h3>
+                            <div className="bg-white shadow-md rounded-lg mt-4">
                                 <iframe
                                     title="Doctor Document"
                                     src={`data:application/pdf;base64,${doctor.document}`}
                                     className="rounded shadow w-full"
-                                    style={{ minHeight: "500px" }}
+                                    style={{ minHeight: "1000px" }}
                                 />
                             </div>
                         )}
-                        <div className="p-6 flex justify-center">
+                        <div className="p-3 flex justify-center">
                             <DoctorDetailsModal
                                 isOpen={isModalOpen}
                                 onClose={() => setModalOpen(false)}

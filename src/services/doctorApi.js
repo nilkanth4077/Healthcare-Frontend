@@ -13,9 +13,19 @@ export const fetchDoctorByUserId = async (token, userId) => {
             },
         });
 
-        return response.data; // return full response, caller can handle it
+        return response.data;
     } catch (error) {
         console.error(error);
-        throw error; // so caller can catch it and show toast
+        throw error;
     }
 };
+
+export const getAllSpecializations = async () => {
+    try {
+        const response = await axios.get(`${BaseUrl}/speciality/all`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
