@@ -34,6 +34,7 @@ import DoctorListPage from './pages/Doctor/DoctorListPage';
 import DoctorDetails from './pages/Doctor/DoctorDetails';
 import DocSlotManagement from './pages/Doctor/DocSlotManagement';
 import SlotDetails from './pages/Doctor/SlotDetails';
+import BookedSlots from './pages/Doctor/BookedSlots';
 
 
 
@@ -57,6 +58,7 @@ function App() {
           <Route path='/doctor/:docId' element={<DoctorDetails />} />
           <Route path='/slot/:slotId' element={<SlotDetails />} />
           <Route path='/doc-slot-management' element={<DocSlotManagement />} />
+          <Route path='/doc/appointments' element={<BookedSlots />} />
           {/* <Route path="/datetimepicker" element={<DateTimePicker />} />
           <Route path="/docreg" element={<Doctorreg />} />
           <Route path="/patientreg" element={<Patientreg />} />
