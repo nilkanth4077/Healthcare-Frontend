@@ -67,3 +67,23 @@ export const bookAppointment = async (token, slotId) => {
         throw error;
     }
 }
+
+export const getBookedSlots = async (doctorId, token) => {
+    try {
+        const response = await axios.get(
+            `${BaseUrl}/doctor/get/booked-appointments`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: {
+                    doctorId,
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
