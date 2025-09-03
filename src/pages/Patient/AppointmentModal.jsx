@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { fetchDoctorByUserId, getSlotsByDoctorId } from '../../services/doctorApi';
+import { bookAppointment, fetchDoctorByUserId, getSlotsByDoctorId } from '../../services/doctorApi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -67,13 +67,25 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
         (slot) => formatFullDate(slot.startTime) === selectedDate
     );
 
-    const handleBook = () => {
+    const handleBook = async () => {
         if (!selectedSlot) {
             return;
         }
-        console.log("Booking slot: ", selectedSlot);
-        alert("Booking functionality coming soon !! ");
-        // API call to book slot here
+        // console.log("Booking slot: ", selectedSlot);
+
+        try {
+            const response = await bookAppointment(token, selectedSlot.id);
+
+            if (response.statusCode === 200) {
+                toast.success("Appointment booked successfully!");
+                closeAppointmentModal();
+                // console.log("Slots response: ", response.data);
+            }
+        } catch (error) {
+            toast.error(error.response?.message || "Something went wrong while booking an appointment.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

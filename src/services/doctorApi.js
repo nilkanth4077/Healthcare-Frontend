@@ -46,3 +46,24 @@ export const getSlotsByDoctorId = async (token, doctorId) => {
         throw error;
     }
 }
+
+export const bookAppointment = async (token, slotId) => {
+    try {
+        const response = await axios.put(
+            `${BaseUrl}/user/book-appointment`, {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: {
+                    slotId,
+                }
+            }
+        );
+        // console.log("Book appointment response from api: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
