@@ -1,5 +1,7 @@
 import { JitsiMeeting } from '@jitsi/react-sdk';
+import { nav } from 'framer-motion/client';
 import React from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const PatientVideoCall = () => {
 
@@ -7,7 +9,9 @@ const PatientVideoCall = () => {
     const userString = localStorage.getItem("user");
     const user = userString ? JSON.parse(userString) : null;
 
-    const roomName = user ? `Dr. ${user.firstName} ${user.lastName}` : "defaultRoom";
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { roomName } = location.state || { roomName: "defaultRoom" };
     const domain = "meet.jit.si";
 
     return (
