@@ -68,23 +68,23 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
         if (!selectedSlot) {
             return;
         }
-        console.log("Booking slot: ", selectedSlot);
+        // console.log("Booking slot: ", selectedSlot);
 
         setBookAppLoading(true);
 
         try {
             const response = await bookAppointment(token, selectedSlot.id);
-            console.log("Book appointment response: ", response);
+            // console.log("Book appointment response: ", response);
 
             if (response.statusCode === 200) {
                 toast.success(response.message || "Appointment booked successfully.");
                 closeAppointmentModal();
-                console.log("Slots response: ", response.message);
+                // console.log("Slots response: ", response.message);
             }
         } catch (error) {
             toast.error(error.response?.message || "Something went wrong while booking an appointment.");
-            console.error("Error booking appointment: ", error);
-            console.log("Error details: ", error.response);
+            // console.error("Error booking appointment: ", error);
+            // console.log("Error details: ", error.response);
         } finally {
             setBookAppLoading(false);
         }
