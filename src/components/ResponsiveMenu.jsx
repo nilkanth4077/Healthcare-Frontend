@@ -47,7 +47,7 @@ const ResponsiveMenu = ({ open }) => {
         USER: [
             { id: 1, title: "Home", link: "/" },
             { id: 2, title: "Book Appointment", link: "/book-appointment" },
-            { id: 3, title: "Video Call", link: "/" },
+            { id: 3, title: "Video Call", link: "https://vc-react-frontend.vercel.app/" },
             { id: 4, title: "About", link: "/" },
             { id: 5, title: "Contact", link: "/" },
         ],
