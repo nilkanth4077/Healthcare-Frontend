@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { bookAppointment, fetchDoctorByUserId, getSlotsByDoctorId } from '../../services/doctorApi';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import { bookAppointment, getSlotsByDoctorId } from '../../services/doctorApi';
 import { toast } from 'react-toastify';
 
 const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
 
-    const navigate = useNavigate();
     const [slots, setSlots] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedSlot, setSelectedSlot] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
 
     const token = localStorage.getItem("token");
-    const userString = localStorage.getItem("user");
-    const user = userString ? JSON.parse(userString) : null;
 
     const fetchSlotsByDoctor = async () => {
         try {
@@ -71,7 +67,7 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
         if (!selectedSlot) {
             return;
         }
-        // console.log("Booking slot: ", selectedSlot);
+        console.log("Booking slot: ", selectedSlot);
 
         try {
             const response = await bookAppointment(token, selectedSlot.id);
@@ -79,7 +75,7 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
             if (response.statusCode === 200) {
                 toast.success("Appointment booked successfully!");
                 closeAppointmentModal();
-                // console.log("Slots response: ", response.data);
+                console.log("Slots response: ", response.data);
             }
         } catch (error) {
             toast.error(error.response?.message || "Something went wrong while booking an appointment.");
@@ -158,11 +154,29 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
 
                     <div className="text-center">
                         {filteredSlots.length > 0 && (
+                            // <button
+                            //     onClick={handleBook}
+                            //     className="mt-6 w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary hover:text-"
+                            // >
+                            //     Book Slot
+                            // </button>
+
                             <button
+                                type="submit"
                                 onClick={handleBook}
-                                className="mt-6 w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary hover:text-"
+                                className="w-full py-2 px-4 bg-primary hover:bg-secondary text-white hover:text-black font-semibold rounded transition duration-200"
                             >
-                                Book Slot
+                                {loading ? (
+                                    <div className="flex items-center justify-center">
+                                        <svg className="animate-spin h-5 w-5 mr-2 text-mtext" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
+                                            <path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v8z" />
+                                        </svg>
+                                        Booking Appointment...
+                                    </div>
+                                ) : (
+                                    "Book Appointment"
+                                )}
                             </button>
                         )}
                     </div>
