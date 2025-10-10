@@ -77,12 +77,14 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
             console.log("Book appointment response: ", response);
 
             if (response.statusCode === 200) {
-                toast.success("Appointment booked successfully!");
+                toast.success(response.message || "Appointment booked successfully.");
                 closeAppointmentModal();
-                console.log("Slots response: ", response.data);
+                console.log("Slots response: ", response.message);
             }
         } catch (error) {
             toast.error(error.response?.message || "Something went wrong while booking an appointment.");
+            console.error("Error booking appointment: ", error);
+            console.log("Error details: ", error.response);
         } finally {
             setBookAppLoading(false);
         }
