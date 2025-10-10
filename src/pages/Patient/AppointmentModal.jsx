@@ -74,6 +74,7 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
 
         try {
             const response = await bookAppointment(token, selectedSlot.id);
+            console.log("Book appointment response: ", response);
 
             if (response.statusCode === 200) {
                 toast.success("Appointment booked successfully!");
@@ -157,13 +158,6 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
 
                     <div className="text-center">
                         {filteredSlots.length > 0 && (
-                            // <button
-                            //     onClick={handleBook}
-                            //     className="mt-6 w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary hover:text-"
-                            // >
-                            //     Book Slot
-                            // </button>
-
                             <button
                                 type="submit"
                                 onClick={handleBook}
