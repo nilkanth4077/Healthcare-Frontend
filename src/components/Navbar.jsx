@@ -16,7 +16,7 @@ export default function Navigation() {
         USER: [
             { id: 1, title: "Home", link: "/" },
             { id: 2, title: "Book Appointment", link: "/book-appointment" },
-            { id: 3, title: "Video Call", link: "https://vc-react-frontend.vercel.app/" },
+            { id: 3, title: "Video Call", link: "https://vc-react-frontend.vercel.app/", target: "_blank" },
             { id: 4, title: "About", link: "/" },
             { id: 5, title: "Contact", link: "/" },
         ],
@@ -61,7 +61,13 @@ export default function Navigation() {
                         <ul className="flex items-center gap-6 text-gray-600">
                             {NavbarMenu.map((menu) => (
                                 <li key={menu.id} className="text-md">
-                                    <a href={menu.link} className="inline-block py-1 px-3 text-primary hover:text-secondary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold">{menu.title}</a>
+                                    <a
+                                        href={menu.link}
+                                        target={menu.target || "_self"}
+                                        rel={menu.target === "_blank" ? "noopener noreferrer" : ""}
+                                        className="inline-block py-1 px-3 text-primary hover:text-secondary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold">
+                                        {menu.title}
+                                    </a>
                                 </li>
                             ))}
                             <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">

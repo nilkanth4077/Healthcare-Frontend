@@ -47,7 +47,7 @@ const ResponsiveMenu = ({ open }) => {
         USER: [
             { id: 1, title: "Home", link: "/" },
             { id: 2, title: "Book Appointment", link: "/book-appointment" },
-            { id: 3, title: "Video Call", link: "https://vc-react-frontend.vercel.app/" },
+            { id: 3, title: "Video Call", link: "https://vc-react-frontend.vercel.app/", target: "_blank" },
             { id: 4, title: "About", link: "/" },
             { id: 5, title: "Contact", link: "/" },
         ],
@@ -83,7 +83,13 @@ const ResponsiveMenu = ({ open }) => {
                         <ul className="flex flex-col items-center gap-10">
                             {menuItems.map((item, index) => (
                                 <li key={index}>
-                                    <a href={item.link}>{item.title}</a>
+                                    <a
+                                        href={item.link}
+                                        target={item.target || "_self"}
+                                        rel={item.target === "_blank" ? "noopener noreferrer" : ""}
+                                    >
+                                        {item.title}
+                                    </a>
                                 </li>
                             ))}
                             {user ? (
