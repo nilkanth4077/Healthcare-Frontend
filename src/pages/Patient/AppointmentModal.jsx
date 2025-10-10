@@ -6,6 +6,7 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
 
     const [slots, setSlots] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [bookAppLoading, setBookAppLoading] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
 
@@ -69,6 +70,8 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
         }
         console.log("Booking slot: ", selectedSlot);
 
+        setBookAppLoading(true);
+
         try {
             const response = await bookAppointment(token, selectedSlot.id);
 
@@ -80,7 +83,7 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
         } catch (error) {
             toast.error(error.response?.message || "Something went wrong while booking an appointment.");
         } finally {
-            setLoading(false);
+            setBookAppLoading(false);
         }
     };
 
@@ -166,7 +169,7 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
                                 onClick={handleBook}
                                 className="w-full py-2 px-4 bg-primary hover:bg-secondary text-white hover:text-black font-semibold rounded transition duration-200"
                             >
-                                {loading ? (
+                                {bookAppLoading ? (
                                     <div className="flex items-center justify-center">
                                         <svg className="animate-spin h-5 w-5 mr-2 text-mtext" viewBox="0 0 24 24">
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
