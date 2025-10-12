@@ -5,24 +5,48 @@ import { toast } from "react-toastify";
 import Navbar from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import BaseUrl from "../../reusables/BaseUrl";
-import SlotDetails from "../Doctor/SlotDetails";
 import AppointmentModal from "./AppointmentModal";
+import { deleteExpiredSlots } from "../../services/doctorApi";
 
 const AppointmentDetails = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [bookAppLoading, setBookAppLoading] = useState(false);
     const speciality = state?.speciality || "";
 
     const [selectedDoctorId, setSelectedDoctorId] = useState(null);
 
     const openAppointmentModal = (doctorId) => setSelectedDoctorId(doctorId);
     const closeAppointmentModal = () => setSelectedDoctorId(null);
+    const token = localStorage.getItem("token");
 
+    const handleExpiredSlots = async (token) => {
+        try {
+            const response = await deleteExpiredSlots(token);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const handleBookAndOpenModal = async (doctorId) => {
+        setBookAppLoading(true);
+        try {
+            const response = await handleExpiredSlots(token);
+            if (response.statusCode === 200) {
+                toast.success(response.message || "Expired slots deleted successfully.");
+                setSelectedDoctorId(doctorId);
+            }
+        } catch (error) {
+            toast.error("Something went wrong while preparing appointment.");
+        } finally {
+            setBookAppLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
 
         if (!token) {
             toast.error("You are not logged in");
@@ -60,8 +84,6 @@ const AppointmentDetails = () => {
         <>
             <Navbar />
             <div>
-                {/* <h2>Doctors with Speciality: {speciality}</h2> */}
-
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-10">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary border-solid"></div>
@@ -103,10 +125,18 @@ const AppointmentDetails = () => {
                                         </div>
 
                                         <button
-                                            className="mt-6 w-full bg-blue-600 text-white py-2 rounded-xl font-medium hover:bg-blue-700 transition"
-                                            onClick={() => openAppointmentModal(doctorWrapper.id)}
+                                            className="mt-6 w-full bg-blue-600 text-white py-2 rounded-xl font-medium hover:bg-blue-700 transition disabled:opacity-70"
+                                            onClick={() => handleBookAndOpenModal(doctorWrapper.id)}
+                                            disabled={bookAppLoading}
                                         >
-                                            Book Appointment
+                                            {bookAppLoading
+                                                ? (
+                                                    <div className="flex items-center justify-center">
+                                                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-white mr-2"></div>
+                                                        Processing...
+                                                    </div>
+                                                )
+                                                : "Book Appointment"}
                                         </button>
                                     </div>
                                 ))}

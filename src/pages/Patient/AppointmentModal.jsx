@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { bookAppointment, getSlotsByDoctorId } from '../../services/doctorApi';
+import { bookAppointment, getSlotsByDoctorId, deleteExpiredSlots } from '../../services/doctorApi';
 import { toast } from 'react-toastify';
 
 const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
@@ -19,8 +19,6 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
             if (response.statusCode === 200) {
                 setSlots(response.data.filter((slot) => slot.available));
                 // console.log("Slots response: ", response.data.filter((slot) => slot.available))
-            } else {
-                toast.error(response.message || "Failed to fetch slots.");
             }
         } catch (error) {
             toast.error(error.response?.message || "Something went wrong while fetching slots.");
@@ -30,9 +28,7 @@ const AppointmentModal = ({ closeAppointmentModal, doctorId }) => {
     };
 
     useEffect(() => {
-        if (doctorId) {
-            fetchSlotsByDoctor(doctorId);
-        }
+        fetchSlotsByDoctor();
     }, [doctorId]);
 
     const handleSubmit = (e) => {

@@ -87,3 +87,21 @@ export const getBookedSlots = async (doctorId, token) => {
         throw error;
     }
 }
+
+export const deleteExpiredSlots = async (token) => {
+    try {
+        const response = await axios.put(
+            `${BaseUrl}/slot/delete/expiredSlot`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
