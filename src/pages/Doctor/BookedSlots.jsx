@@ -76,9 +76,8 @@ export default function BookedSlots() {
     }, [doctor.doctorId]);
 
     const handleClick = () => {
-        alert(`Starting video call`);
-        // navigate("/call");
-    }
+        window.open("https://vc-react-frontend.vercel.app/", "_blank");
+    };
 
     return (
         <>
@@ -126,15 +125,12 @@ export default function BookedSlots() {
 
                             {/* Button */}
                             <button
-
-                                className="mt-4 py-2 px-4 rounded-lg text-sm font-medium transition bg-blue-600 text-white hover:bg-blue-700"
-
-                                // className={`mt-4 py-2 px-4 rounded-lg text-sm font-medium transition 
-                                //     ${isSlotActive(slot)
-                                //         ? "bg-blue-600 text-white hover:bg-blue-700"
-                                //         : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                //     }`}
-                                // disabled={!isSlotActive(slot)}
+                                className={`mt-4 py-2 px-4 rounded-lg text-sm font-medium transition 
+                                    ${slot.slotType === "ONLINE" && isSlotActive(slot)
+                                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                    }`}
+                                disabled={!isSlotActive(slot) || slot.slotType !== "OFFLINE"}
 
                                 onClick={handleClick}
                             >
