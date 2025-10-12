@@ -26,7 +26,6 @@ const MyAppointments = () => {
         const now = new Date();
         const start = new Date(doctorWrapper.startTime);
         const end = new Date(doctorWrapper.endTime);
-        console.log("Now: ", now, " Start: ", start, " End: ", end);
 
         // button enabled if today’s date matches slot date AND now is between start and end
         return (
