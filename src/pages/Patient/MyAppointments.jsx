@@ -94,61 +94,64 @@ const MyAppointments = () => {
                                 </button>
                             </div>
                         ) : (
-                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4 bg-back">
-                                {appointments.map((doctorWrapper) => (
-                                    <div
-                                        key={doctorWrapper.appointmentId}
-                                        className="bg-white shadow-md rounded-2xl p-6 flex flex-col justify-between hover:shadow-lg transition"
-                                    >
-                                        <div>
-                                            <h2 className="text-xl font-semibold text-gray-800">
-                                                Appointment Id: {doctorWrapper.appointmentId}
-                                            </h2>
-                                            <span
-                                                className={`inline-block my-2 px-3 py-1 rounded-full text-sm font-medium ${doctorWrapper.appointmentStatus === "BOOKED"
-                                                    ? "bg-green-100 text-green-700"
-                                                    : "bg-yellow-100 text-yellow-700"
-                                                    }`}
-                                            >
-                                                {doctorWrapper.appointmentStatus}
-                                            </span>
-                                            <p className="text-md text-gray-600 mt-1">
-                                                <b>{doctorWrapper.doctorFirstName} {doctorWrapper.doctorLastName}</b> ({doctorWrapper.specialization})
-                                            </p>
-                                            <p className="text-md text-gray-600 mt-1">
-                                                <b>Date:</b> {doctorWrapper.startTime.toString().substring(0, 10).split("-").reverse().join("-")}
-                                            </p>
-                                            <p className="text-md text-gray-600 mt-1">
-                                                <b>Slot:</b>{" "}
-                                                {formatTime(doctorWrapper.startTime)} - {" "}
-                                                {formatTime(doctorWrapper.endTime)}
-                                            </p>
-                                            <p className="text-md text-gray-600 mt-1">
-                                                <b>Type:</b> {doctorWrapper.slotType}
-                                            </p>
-                                            <p className="text-md text-gray-600 mt-1">
-                                                <b>Email:</b> {doctorWrapper.doctorEmail}
-                                            </p>
-                                            <p className="text-md text-gray-600 mt-1">
-                                                <b>Mobile:</b> {doctorWrapper.doctorMobile}
-                                            </p>
-                                        </div>
-
-                                        <button
-                                            className={`mt-4 py-2 px-4 rounded-lg text-sm font-medium transition 
-                                                ${doctorWrapper.slotType === "ONLINE" && isSlotActive(doctorWrapper)
-                                                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                                                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                                }`}
-                                            disabled={!isSlotActive(doctorWrapper) || doctorWrapper.slotType !== "OFFLINE"}
-
-                                            onClick={handleClick}
+                            <>
+                                <p className="bg-back text-center text-primary p-2">Tip : <span className="text-secondary">Once your time starts, refresh to enable the button.</span></p>
+                                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4 bg-back">
+                                    {appointments.map((doctorWrapper) => (
+                                        <div
+                                            key={doctorWrapper.appointmentId}
+                                            className="bg-white shadow-md rounded-2xl p-6 flex flex-col justify-between hover:shadow-lg transition"
                                         >
-                                            Start Video Call
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
+                                            <div>
+                                                <h2 className="text-xl font-semibold text-gray-800">
+                                                    Appointment Id: {doctorWrapper.appointmentId}
+                                                </h2>
+                                                <span
+                                                    className={`inline-block my-2 px-3 py-1 rounded-full text-sm font-medium ${doctorWrapper.appointmentStatus === "BOOKED"
+                                                        ? "bg-green-100 text-green-700"
+                                                        : "bg-yellow-100 text-yellow-700"
+                                                        }`}
+                                                >
+                                                    {doctorWrapper.appointmentStatus}
+                                                </span>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>{doctorWrapper.doctorFirstName} {doctorWrapper.doctorLastName}</b> ({doctorWrapper.specialization})
+                                                </p>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>Date:</b> {doctorWrapper.startTime.toString().substring(0, 10).split("-").reverse().join("-")}
+                                                </p>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>Slot:</b>{" "}
+                                                    {formatTime(doctorWrapper.startTime)} - {" "}
+                                                    {formatTime(doctorWrapper.endTime)}
+                                                </p>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>Type:</b> {doctorWrapper.slotType}
+                                                </p>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>Email:</b> {doctorWrapper.doctorEmail}
+                                                </p>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>Mobile:</b> {doctorWrapper.doctorMobile}
+                                                </p>
+                                            </div>
+
+                                            <button
+                                                className={`mt-4 py-2 px-4 rounded-lg text-sm font-medium transition 
+                                                ${doctorWrapper.slotType === "ONLINE" && isSlotActive(doctorWrapper)
+                                                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                                                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                                    }`}
+                                                disabled={!isSlotActive(doctorWrapper) || doctorWrapper.slotType !== "OFFLINE"}
+
+                                                onClick={handleClick}
+                                            >
+                                                Start Video Call
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
                         )}
                     </>
                 )}
