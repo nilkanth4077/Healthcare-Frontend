@@ -60,7 +60,7 @@ export const bookAppointment = async (token, slotId) => {
                 }
             }
         );
-        console.log("Book appointment response from api: ", response.data);
+        // console.log("Book appointment response from api: ", response.data);
         return response.data;
     } catch (error) {
         console.error(error);
@@ -101,7 +101,7 @@ export const deleteExpiredSlots = async (token) => {
         );
         return response.data;
     } catch (error) {
-        console.log("Error from api:", error);
+        console.error(error);
         throw error;
     }
 };
