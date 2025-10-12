@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchDoctorByUserId, getBookedSlots } from "../../services/doctorApi";
+import { fetchDoctorByUserId, getAppointmentBySlotId, getBookedSlots, triggerRoomDetails } from "../../services/doctorApi";
 import { toast } from "react-toastify";
 import { Footer } from "../../components/Footer";
 import Navbar from "../../components/Navbar";
@@ -10,6 +10,7 @@ export default function BookedSlots() {
     const navigate = useNavigate();
     const [slots, setSlots] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingId, setLoadingId] = useState(null);
     const [doctor, setDoctor] = useState({});
 
     const token = localStorage.getItem("token");
@@ -40,7 +41,7 @@ export default function BookedSlots() {
 
             if (response.statusCode === 200) {
                 setSlots(response.data);
-                // console.log("Slots response: ", response.data)
+                console.log("Slots response: ", response.data)
             } else {
                 toast.error(response.message || "Failed to fetch slots.");
             }
@@ -56,12 +57,7 @@ export default function BookedSlots() {
         const start = new Date(slot.startTime);
         const end = new Date(slot.endTime);
 
-        // button enabled if today’s date matches slot date AND now is between start and end
-        return (
-            now.toDateString() === start.toDateString() &&
-            now >= start &&
-            now <= end
-        );
+        return now >= start && now <= end;
     };
 
 
@@ -75,8 +71,36 @@ export default function BookedSlots() {
         }
     }, [doctor.doctorId]);
 
-    const handleClick = () => {
-        window.open("https://vc-react-frontend.vercel.app/", "_blank");
+    const handleClick = async (slotId) => {
+        setLoadingId(slotId);
+
+        try {
+            const appointmentResponse = await getAppointmentBySlotId(slotId, token);
+
+            if (appointmentResponse.statusCode === 200 && appointmentResponse.data) {
+                const appointmentId = appointmentResponse.data.appointmentId;
+
+                const emailResponse = await triggerRoomDetails(appointmentId, token);
+
+                if (emailResponse.statusCode === 200) {
+                    toast.success("Room details sent to your email", {
+                        autoClose: 2000,
+                        onClose: () => {
+                            window.open("https://vc-react-frontend.vercel.app/", "_blank");
+                        },
+                    });
+                } else {
+                    toast.error(emailResponse.message || "Failed to send room details");
+                }
+            } else {
+                toast.error("Failed to fetch appointment details");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong");
+        } finally {
+            setLoadingId(null);
+        }
     };
 
     return (
@@ -123,18 +147,23 @@ export default function BookedSlots() {
                                 </span>
                             </div>
 
-                            {/* Button */}
                             <button
                                 className={`mt-4 py-2 px-4 rounded-lg text-sm font-medium transition 
                                     ${slot.slotType === "ONLINE" && isSlotActive(slot)
                                         ? "bg-blue-600 text-white hover:bg-blue-700"
                                         : "bg-gray-300 text-gray-500 cursor-not-allowed"
                                     }`}
-                                disabled={!isSlotActive(slot) || slot.slotType !== "OFFLINE"}
-
-                                onClick={handleClick}
+                                disabled={!isSlotActive(slot) || slot.slotType !== "ONLINE"}
+                                onClick={() => handleClick(slot.slotId)}
                             >
-                                Start Video Call
+                                {loadingId === slot.slotId ? (
+                                    <>
+                                        <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2 inline-block"></div>
+                                        Sending...
+                                    </>
+                                ) : (
+                                    "Start Video Call"
+                                )}
                             </button>
                         </div>
                     ))}
