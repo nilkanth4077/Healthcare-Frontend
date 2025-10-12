@@ -5,11 +5,13 @@ import { toast } from "react-toastify";
 import Navbar from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import BaseUrl from "../../reusables/BaseUrl";
+import { triggerRoomDetails } from "../../services/doctorApi";
 
 const MyAppointments = () => {
     const navigate = useNavigate();
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingId, setLoadingId] = useState(null);
 
     const token = localStorage.getItem("token");
 
@@ -22,21 +24,33 @@ const MyAppointments = () => {
         return `${hour}:${minute} ${ampm}`;
     };
 
-    const isSlotActive = (doctorWrapper) => {
+    const isSlotActive = (slot) => {
         const now = new Date();
-        const start = new Date(doctorWrapper.startTime);
-        const end = new Date(doctorWrapper.endTime);
+        const start = new Date(slot.startTime);
+        const end = new Date(slot.endTime);
 
-        // button enabled if today’s date matches slot date AND now is between start and end
-        return (
-            now.toDateString() === start.toDateString() &&
-            now >= start &&
-            now <= end
-        );
+        return now >= start && now <= end;
     };
 
-    const handleClick = () => {
-        window.open("https://vc-react-frontend.vercel.app/", "_blank");
+    const handleClick = async (appointmentId) => {
+        setLoadingId(appointmentId);
+        try {
+            const response = await triggerRoomDetails(appointmentId, token);
+            if (response.statusCode === 200) {
+                toast.success("Room details sent to your email", {
+                    autoClose: 2000,
+                    onClose: () => {
+                        window.open("https://vc-react-frontend.vercel.app/", "_blank");
+                    }
+                });
+            } else {
+                toast.error(response.message || "Failed to send room details");
+            }
+        } catch (error) {
+            toast.error("Something went wrong triggering email");
+        } finally {
+            setLoadingId(null);
+        }
     }
 
     useEffect(() => {
@@ -136,17 +150,42 @@ const MyAppointments = () => {
                                                 </p>
                                             </div>
 
-                                            <button
+                                            {/* <button
                                                 className={`mt-4 py-2 px-4 rounded-lg text-sm font-medium transition 
                                                 ${doctorWrapper.slotType === "ONLINE" && isSlotActive(doctorWrapper)
                                                         ? "bg-blue-600 text-white hover:bg-blue-700"
                                                         : "bg-gray-300 text-gray-500 cursor-not-allowed"
                                                     }`}
-                                                disabled={!isSlotActive(doctorWrapper) || doctorWrapper.slotType !== "OFFLINE"}
-
-                                                onClick={handleClick}
+                                                disabled={doctorWrapper.slotType !== "ONLINE" || !isSlotActive(doctorWrapper)}
+                                                onClick={() => handleClick(doctorWrapper.appointmentId)}
                                             >
                                                 Start Video Call
+                                            </button> */}
+
+                                            <button
+                                                className={`mt-4 py-2 px-4 rounded-lg text-sm font-medium transition flex justify-center items-center gap-2
+                                                    ${doctorWrapper.slotType === "ONLINE" &&
+                                                        isSlotActive(doctorWrapper)
+                                                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                                                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                                    }`}
+                                                disabled={
+                                                    doctorWrapper.slotType !== "ONLINE" ||
+                                                    !isSlotActive(doctorWrapper) ||
+                                                    loadingId === doctorWrapper.appointmentId
+                                                }
+                                                onClick={() =>
+                                                    handleClick(doctorWrapper.appointmentId)
+                                                }
+                                            >
+                                                {loadingId === doctorWrapper.appointmentId ? (
+                                                    <>
+                                                        <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                                                        Sending...
+                                                    </>
+                                                ) : (
+                                                    "Start Video Call"
+                                                )}
                                             </button>
                                         </div>
                                     ))}

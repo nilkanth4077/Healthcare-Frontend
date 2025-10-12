@@ -105,3 +105,45 @@ export const deleteExpiredSlots = async (token) => {
         throw error;
     }
 };
+
+export const triggerRoomDetails = async (appointmentId, token) => {
+    try {
+        const response = await axios.post(
+            `${BaseUrl}/send/email/roomDetails`, {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: {
+                    appointmentId,
+                }
+            }
+        );
+        console.log("Trigger room details response: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.log("Error from api: ", error);
+        throw error;
+    }
+};
+
+export const getAppointmentBySlotId = async (slotId, token) => {
+    try {
+        const response = await axios.get(
+            `${BaseUrl}/get/appointment`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: {
+                    slotId: slotId,
+                }
+            }
+        );
+        console.log("Get appointment by slotId response: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.log("Error api: ", error);
+        throw error;
+    }
+};
