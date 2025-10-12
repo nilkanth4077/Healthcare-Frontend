@@ -60,7 +60,7 @@ export const bookAppointment = async (token, slotId) => {
                 }
             }
         );
-        // console.log("Book appointment response from api: ", response.data);
+        console.log("Book appointment response from api: ", response.data);
         return response.data;
     } catch (error) {
         console.error(error);
@@ -87,3 +87,21 @@ export const getBookedSlots = async (doctorId, token) => {
         throw error;
     }
 }
+
+export const deleteExpiredSlots = async (token) => {
+    try {
+        const response = await axios.put(
+            `${BaseUrl}/slot/delete/expiredSlot`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.log("Error from api:", error);
+        throw error;
+    }
+};
