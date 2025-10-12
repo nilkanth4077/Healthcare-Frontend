@@ -15,10 +15,9 @@ export default function Navigation() {
     const menuConfig = {
         USER: [
             { id: 1, title: "Home", link: "/" },
-            { id: 2, title: "Book Appointment", link: "/book-appointment" },
+            { id: 2, title: "My Appointments", link: "/my-appointments" },
             { id: 3, title: "Video Call", link: "https://vc-react-frontend.vercel.app/", target: "_blank" },
-            { id: 4, title: "About", link: "/" },
-            { id: 5, title: "Contact", link: "/" },
+            { id: 4, title: "Contact", link: "/" },
         ],
         DOCTOR: [
             { id: 1, title: "Dashboard", link: "/doctor-dashboard" },
