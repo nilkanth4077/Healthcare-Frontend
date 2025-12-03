@@ -1,45 +1,47 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import BaseUrl from "../reusables/BaseUrl";
+import { jwtDecode } from "jwt-decode";
 
 const ResponsiveMenu = ({ open }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    const token = localStorage.getItem("token");
+    const [token, setToken] = useState(null);
 
     useEffect(() => {
-        if (token) {
-            const fetchUserProfile = async () => {
-                try {
-                    const response = await fetch(
-                        `${BaseUrl}/auth/profile`,
-                        {
-                            method: "GET",
-                            headers: { Authorization: `Bearer ${token}` },
-                        }
-                    );
+        const storedToken = localStorage.getItem("token");
+        const storedUser = JSON.parse(localStorage.getItem("user"));
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        setUser(data);
-                    } else {
-                        localStorage.removeItem("token");
-                        localStorage.removeItem("user");
-                        setUser(null);
-                    }
-                } catch (error) {
-                    console.error("Error fetching user profile:", error);
+        if (storedToken) {
+            try {
+                const decoded = jwtDecode(storedToken);
+
+                if (decoded.exp * 1000 < Date.now()) {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    setToken(null);
+                    setUser(null);
+                    return;
                 }
-            };
-            fetchUserProfile();
+
+                setToken(storedToken);
+                setUser(storedUser);
+
+            } catch (error) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                setToken(null);
+                setUser(null);
+                return;
+            }
         }
-    }, [token]);
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         setUser(null);
+        setToken(null);
         navigate("/");
     };
 
@@ -91,7 +93,7 @@ const ResponsiveMenu = ({ open }) => {
                                     </a>
                                 </li>
                             ))}
-                            {user ? (
+                            {token ? (
                                 <button
                                     className="px-6 py-2 bg-white text-red-600 rounded-xl hover:bg-red-700 transition duration-300"
                                     onClick={handleLogout}

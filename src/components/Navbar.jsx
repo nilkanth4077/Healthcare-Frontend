@@ -1,16 +1,41 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
 import { FaLaptopMedical } from "react-icons/fa";
 import { MdMenu } from "react-icons/md";
 import ResponsiveMenu from "./ResponsiveMenu";
+import { jwtDecode } from "jwt-decode";
 
 export default function Navigation() {
     const [open, setOpen] = useState(false);
-    const navigate = useNavigate();
 
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
+    const [token, setToken] = useState(null);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem("token");
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+
+        if (storedToken) {
+            try {
+                const decoded = jwtDecode(storedToken);
+
+                if (decoded.exp * 1000 < Date.now()) {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    setToken(null);
+                    setUser(null);
+                    return;
+                }
+
+                setToken(storedToken);
+                setUser(storedUser);
+            } catch (err) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                setToken(null);
+                setUser(null);
+            }
+        }
+    }, []);
 
     const menuConfig = {
         USER: [
