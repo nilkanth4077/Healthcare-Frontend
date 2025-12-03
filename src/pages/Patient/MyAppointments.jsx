@@ -114,7 +114,6 @@ const MyAppointments = () => {
                             </div>
                         ) : (
                             <>
-                                <p className="bg-back text-center text-primary p-2">Tip : <span className="text-secondary">Once your slot begins, refresh to enable the button.</span></p>
                                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4 bg-back">
                                     {appointments.map((doctorWrapper) => (
                                         <div

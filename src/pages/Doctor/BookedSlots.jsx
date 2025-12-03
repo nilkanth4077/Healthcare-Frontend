@@ -17,6 +17,15 @@ export default function BookedSlots() {
     const userString = localStorage.getItem("user");
     const user = userString ? JSON.parse(userString) : null;
 
+    const formatTime = (dateStr) => {
+        if (!dateStr) return "";
+        const [hourStr, minute] = dateStr.substring(11, 16).split(":");
+        let hour = parseInt(hourStr, 10);
+        const ampm = hour >= 12 ? "PM" : "AM";
+        hour = hour % 12 || 12;
+        return `${hour}:${minute} ${ampm}`;
+    };
+
     const getDoctorByUserId = async () => {
         try {
             const response = await fetchDoctorByUserId(token, user.id);
@@ -41,7 +50,7 @@ export default function BookedSlots() {
 
             if (response.statusCode === 200) {
                 setSlots(response.data);
-                console.log("Slots response: ", response.data)
+                // console.log("Slots response: ", response.data)
             } else {
                 toast.error(response.message || "Failed to fetch slots.");
             }
@@ -78,19 +87,18 @@ export default function BookedSlots() {
             const appointmentResponse = await getAppointmentBySlotId(slotId, token);
 
             if (appointmentResponse.statusCode === 200 && appointmentResponse.data) {
-                const appointmentId = appointmentResponse.data.appointmentId;
+                const now = new Date();
 
-                const emailResponse = await triggerRoomDetails(appointmentId, token);
+                const start = new Date(`${appointmentResponse.data.startTime}`);
+                const end = new Date(`${appointmentResponse.data.endTime}`);
 
-                if (emailResponse.statusCode === 200) {
-                    toast.success("Room details sent to your email", {
-                        autoClose: 2000,
-                        onClose: () => {
-                            window.open("https://vc-react-frontend.vercel.app/", "_blank");
-                        },
-                    });
+                if (now >= start && now <= end) {
+                    window.open(
+                        "https://us04web.zoom.us/j/73267484987?pwd=yd5yaeyRvcrJt5wsWmbOkj7GaWKYf4.1",
+                        "_blank"
+                    );
                 } else {
-                    toast.error(emailResponse.message || "Failed to send room details");
+                    toast.error("Meeting is not allowed at this time", { autoClose: 2000 });
                 }
             } else {
                 toast.error("Failed to fetch appointment details");
@@ -106,68 +114,86 @@ export default function BookedSlots() {
     return (
         <>
             <Navbar />
-            <div className="p-6">
-                <h2 className="text-2xl font-bold mb-6">Booked Slots</h2>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {slots.map((slot) => (
-                        <div
-                            key={slot.appointmentId}
-                            className="bg-white shadow-md rounded-2xl p-4 flex flex-col justify-between hover:shadow-lg transition"
-                        >
-                            {/* Patient Info */}
-                            <div>
-                                <h3 className="text-lg font-semibold text-gray-800">
-                                    {slot.patientName}
-                                </h3>
-                                <p className="text-sm text-gray-500">{slot.patientEmail}</p>
-                                <p className="text-sm text-gray-500">{slot.patientMobile}</p>
+            <div>
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-10">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary border-solid"></div>
+                        <p className="mt-4 text-gray-600 font-medium">
+                            Fetching your appointments, please wait...
+                        </p>
+                    </div>
+                ) : (
+                    <>
+                        {slots.length === 0 ? (
+                            <div className="text-center py-5">
+                                <p className="font-medium">You do not have any appointments</p>
                             </div>
+                        ) : (
+                            <>
+                                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4 bg-back">
+                                    {slots.map((slot) => (
+                                        <div
+                                            key={slot.appointmentId}
+                                            className="bg-white shadow-md rounded-2xl p-6 flex flex-col justify-between hover:shadow-lg transition"
+                                        >
+                                            {/* Patient Info */}
+                                            <div>
+                                                <h2 className="text-xl font-semibold text-gray-800">
+                                                    Appointment Id: {slot.appointmentId}
+                                                </h2>
+                                                <span
+                                                    className={`inline-block my-2 px-3 py-1 rounded-full text-sm font-medium ${slot.status === "BOOKED"
+                                                        ? "bg-green-100 text-green-700"
+                                                        : "bg-yellow-100 text-yellow-700"
+                                                        }`}
+                                                >
+                                                    {slot.status}
+                                                </span>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>{slot.patientName}</b>
+                                                </p>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>Date:</b> {slot.startTime.toString().substring(0, 10).split("-").reverse().join("-")}
+                                                </p>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>Slot:</b>{" "}
+                                                    {formatTime(slot.startTime)} - {" "}
+                                                    {formatTime(slot.endTime)}
+                                                </p>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>Type:</b> {slot.slotType}
+                                                </p>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>Email:</b> {slot.patientEmail}
+                                                </p>
+                                                <p className="text-md text-gray-600 mt-1">
+                                                    <b>Mobile:</b> {slot.patientMobile}
+                                                </p>
+                                            </div>
 
-                            {/* Slot Info */}
-                            <div className="mt-3">
-                                <p className="text-sm text-gray-700">
-                                    <span className="font-medium">Type:</span> {slot.slotType}
-                                </p>
-                                <p className="text-sm text-gray-700">
-                                    <span className="font-medium">Start:</span>{" "}
-                                    {new Date(slot.startTime).toLocaleString()}
-                                </p>
-                                <p className="text-sm text-gray-700">
-                                    <span className="font-medium">End:</span>{" "}
-                                    {new Date(slot.endTime).toLocaleString()}
-                                </p>
-                                <span
-                                    className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${slot.status === "BOOKED"
-                                        ? "bg-green-100 text-green-700"
-                                        : "bg-red-100 text-red-700"
-                                        }`}
-                                >
-                                    {slot.status}
-                                </span>
-                            </div>
-
-                            <button
-                                className={`mt-4 py-2 px-4 rounded-lg text-sm font-medium transition 
-                                    ${slot.slotType === "ONLINE" && isSlotActive(slot)
-                                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                    }`}
-                                disabled={!isSlotActive(slot) || slot.slotType !== "ONLINE"}
-                                onClick={() => handleClick(slot.slotId)}
-                            >
-                                {loadingId === slot.slotId ? (
-                                    <>
-                                        <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2 inline-block"></div>
-                                        Sending...
-                                    </>
-                                ) : (
-                                    "Start Video Call"
-                                )}
-                            </button>
-                        </div>
-                    ))}
-                </div>
+                                            <button
+                                                className={`mt-4 py-2 px-4 rounded-lg text-sm font-medium transition 
+                                                ${slot.slotType === "ONLINE" && "bg-blue-600 text-white hover:bg-blue-700"
+                                                    }`}
+                                                // disabled={!isSlotActive(slot) || slot.slotType !== "ONLINE"}
+                                                onClick={() => handleClick(slot.slotId)}
+                                            >
+                                                {loadingId === slot.slotId ? (
+                                                    <>
+                                                        <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2 inline-block"></div>
+                                                        Sending...
+                                                    </>
+                                                ) : (
+                                                    "Start Call"
+                                                )}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
             </div>
             <Footer />
         </>
