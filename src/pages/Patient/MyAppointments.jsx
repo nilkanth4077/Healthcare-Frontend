@@ -32,26 +32,31 @@ const MyAppointments = () => {
         return now >= start && now <= end;
     };
 
-    const handleClick = async (appointmentId) => {
-        setLoadingId(appointmentId);
+    const handleClick = (appointment) => {
+        setLoadingId(appointment.appointmentId);
+
         try {
-            const response = await triggerRoomDetails(appointmentId, token);
-            if (response.statusCode === 200) {
-                toast.success("Room details sent to your email", {
-                    autoClose: 2000,
-                    onClose: () => {
-                        window.open("https://vc-react-frontend.vercel.app/", "_blank");
-                    }
-                });
+            const now = new Date();
+
+            const start = new Date(`${appointment.startTime}`);
+            const end = new Date(`${appointment.endTime}`);
+
+            if (now >= start && now <= end) {
+                window.open(
+                    "https://us04web.zoom.us/j/73267484987?pwd=yd5yaeyRvcrJt5wsWmbOkj7GaWKYf4.1",
+                    "_blank"
+                );
             } else {
-                toast.error(response.message || "Failed to send room details");
+                toast.error("Meeting is not allowed at this time", { autoClose: 2000 });
             }
+
         } catch (error) {
-            toast.error("Something went wrong triggering email");
+            console.log("Time validation error: ", error);
+            toast.error("Something went wrong");
         } finally {
             setLoadingId(null);
         }
-    }
+    };
 
     useEffect(() => {
 
@@ -109,7 +114,7 @@ const MyAppointments = () => {
                             </div>
                         ) : (
                             <>
-                                <p className="bg-back text-center text-primary p-2">Tip : <span className="text-secondary">Once your time starts, refresh to enable the button.</span></p>
+                                <p className="bg-back text-center text-primary p-2">Tip : <span className="text-secondary">Once your slot begins, refresh to enable the button.</span></p>
                                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4 bg-back">
                                     {appointments.map((doctorWrapper) => (
                                         <div
@@ -164,18 +169,15 @@ const MyAppointments = () => {
 
                                             <button
                                                 className={`mt-4 py-2 px-4 rounded-lg text-sm font-medium transition flex justify-center items-center gap-2
-                                                    ${doctorWrapper.slotType === "ONLINE" &&
-                                                        isSlotActive(doctorWrapper)
-                                                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                                                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                                    ${doctorWrapper.slotType === "ONLINE" && "bg-blue-600 text-white hover:bg-blue-700"
                                                     }`}
-                                                disabled={
-                                                    doctorWrapper.slotType !== "ONLINE" ||
-                                                    !isSlotActive(doctorWrapper) ||
-                                                    loadingId === doctorWrapper.appointmentId
-                                                }
+                                                // disabled={
+                                                //     doctorWrapper.slotType !== "ONLINE" ||
+                                                //     !isSlotActive(doctorWrapper) ||
+                                                //     loadingId === doctorWrapper.appointmentId
+                                                // }
                                                 onClick={() =>
-                                                    handleClick(doctorWrapper.appointmentId)
+                                                    handleClick(doctorWrapper)
                                                 }
                                             >
                                                 {loadingId === doctorWrapper.appointmentId ? (
@@ -184,7 +186,7 @@ const MyAppointments = () => {
                                                         Sending...
                                                     </>
                                                 ) : (
-                                                    "Start Video Call"
+                                                    "Start Call"
                                                 )}
                                             </button>
                                         </div>
