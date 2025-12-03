@@ -36,6 +36,7 @@ const MyAppointments = () => {
         setLoadingId(appointmentId);
         try {
             const response = await triggerRoomDetails(appointmentId, token);
+            console.log("Trigger room details response: ", response);
             if (response.statusCode === 200) {
                 toast.success("Room details sent to your email", {
                     autoClose: 2000,
@@ -47,6 +48,7 @@ const MyAppointments = () => {
                 toast.error(response.message || "Failed to send room details");
             }
         } catch (error) {
+            console.log("Error triggering room details: ", error);
             toast.error("Something went wrong triggering email");
         } finally {
             setLoadingId(null);
@@ -109,7 +111,7 @@ const MyAppointments = () => {
                             </div>
                         ) : (
                             <>
-                                <p className="bg-back text-center text-primary p-2">Tip : <span className="text-secondary">Once your time starts, refresh to enable the button.</span></p>
+                                <p className="bg-back text-center text-primary p-2">Tip : <span className="text-secondary">Once your slot begins, refresh to enable the button.</span></p>
                                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4 bg-back">
                                     {appointments.map((doctorWrapper) => (
                                         <div
