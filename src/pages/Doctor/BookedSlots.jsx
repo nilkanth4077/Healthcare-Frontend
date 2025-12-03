@@ -94,7 +94,7 @@ export default function BookedSlots() {
 
                 if (now >= start && now <= end) {
                     window.open(
-                        "https://us04web.zoom.us/j/73267484987?pwd=yd5yaeyRvcrJt5wsWmbOkj7GaWKYf4.1",
+                        "https://us04web.zoom.us/j/72577264239?pwd=gaberra1OP3usMXwPJF8KWaZ1Rz5cf.1",
                         "_blank"
                     );
                 } else {
