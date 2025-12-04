@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { Footer } from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import BaseUrl from "../../reusables/BaseUrl";
 
 export default function BookedSlots() {
 
@@ -69,7 +71,6 @@ export default function BookedSlots() {
         return now >= start && now <= end;
     };
 
-
     useEffect(() => {
         getDoctorByUserId();
     }, []);
@@ -87,18 +88,42 @@ export default function BookedSlots() {
             const appointmentResponse = await getAppointmentBySlotId(slotId, token);
 
             if (appointmentResponse.statusCode === 200 && appointmentResponse.data) {
-                const now = new Date();
 
+                const existingMeetDetails = await axios.get(
+                    `${BaseUrl}/zoom/meet-details?appointmentId=${appointmentResponse.data.appointmentId}`
+                ).catch((err) => err.response);
+
+                const meet = existingMeetDetails?.data?.data;
+
+                if (meet && (meet.startUrl || meet.joinUrl)) {
+                    window.open(meet.startUrl ?? meet.joinUrl, "_blank");
+                    return;
+                }
+
+                const now = new Date();
                 const start = new Date(`${appointmentResponse.data.startTime}`);
                 const end = new Date(`${appointmentResponse.data.endTime}`);
 
-                if (now >= start && now <= end) {
-                    window.open(
-                        "https://us04web.zoom.us/j/72577264239?pwd=gaberra1OP3usMXwPJF8KWaZ1Rz5cf.1",
-                        "_blank"
-                    );
-                } else {
+                if (!(now >= start && now <= end)) {
                     toast.error("Meeting is not allowed at this time", { autoClose: 2000 });
+                    return;
+                }
+
+                try {
+                    const response = await axios.post(
+                        `${BaseUrl}/zoom/create-meeting?appointmentId=${appointmentResponse.data.appointmentId}`,
+                    );
+
+                    if (response.data.statusCode === 200) {
+                        const newMeetDetails = response.data;
+                        window.open(newMeetDetails.data.startUrl ?? newMeetDetails.data.joinUrl, "_blank");
+                    } else {
+                        toast.error(response.data.message || "Failed to retrieve meeting link.", { autoClose: 2000 });
+                        return;
+                    }
+
+                } catch (err) {
+                    toast.error(err.response.message || "Failed to create Zoom meeting", { autoClose: 2000 });
                 }
             } else {
                 toast.error("Failed to fetch appointment details");
@@ -181,7 +206,7 @@ export default function BookedSlots() {
                                                 {loadingId === slot.slotId ? (
                                                     <>
                                                         <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2 inline-block"></div>
-                                                        Sending...
+                                                        Creating Meeting...
                                                     </>
                                                 ) : (
                                                     "Start Call"
