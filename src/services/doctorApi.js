@@ -119,7 +119,7 @@ export const triggerRoomDetails = async (appointmentId, token) => {
                 }
             }
         );
-        console.log("Trigger room details response: ", response.data);
+        // console.log("Trigger room details response: ", response.data);
         return response.data;
     } catch (error) {
         console.log("Error from api: ", error);
@@ -140,7 +140,7 @@ export const getAppointmentBySlotId = async (slotId, token) => {
                 }
             }
         );
-        console.log("Get appointment by slotId response: ", response.data);
+        // console.log("Get appointment by slotId response: ", response.data);
         return response.data;
     } catch (error) {
         console.log("Error api: ", error);

@@ -118,6 +118,8 @@ const AddSlots = ({ closeAddSlotModal }) => {
             toast.error(error.response?.data?.message || "Something went wrong", {
                 autoClose: 5000,
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -219,13 +221,27 @@ const AddSlots = ({ closeAddSlotModal }) => {
                     </button>
                 </div>
 
-                {/* Submit Button */}
                 <div className="text-center">
-                    <button
+                    {/* <button
                         type="submit"
                         className="w-full py-2 px-4 bg-primary text-back font-bold rounded-lg hover:bg-secondary hover:text-back focus:ring-8 focus:ring-primary"
                     >
                         Add Slots
+                    </button> */}
+
+                    <button
+                        className="w-full mt-2 py-2 px-4 text-sm transition bg-primary text-back font-bold rounded-lg hover:bg-secondary hover:text-back focus:ring-2 focus:ring-primary"
+                        // disabled={!isSlotActive(slot) || slot.slotType !== "ONLINE"}
+                        type="submit"
+                    >
+                        {loading ? (
+                            <>
+                                <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2 inline-block"></div>
+                                Inserting Slots...
+                            </>
+                        ) : (
+                            "Add Slots"
+                        )}
                     </button>
                 </div>
             </form>

@@ -32,26 +32,35 @@ const MyAppointments = () => {
         return now >= start && now <= end;
     };
 
-    const handleClick = (appointment) => {
+    const handleClick = async (appointment) => {
         setLoadingId(appointment.appointmentId);
 
         try {
-            const now = new Date();
+            const existingMeetDetails = await axios.get(
+                `${BaseUrl}/zoom/meet-details?appointmentId=${appointment.appointmentId}`
+            ).catch((err) => err.response);
 
+            const meet = existingMeetDetails?.data?.data;
+
+            if (meet && (meet.startUrl || meet.joinUrl)) {
+                window.open(meet.startUrl ?? meet.joinUrl, "_blank");
+                return;
+            }
+
+            const now = new Date();
             const start = new Date(`${appointment.startTime}`);
             const end = new Date(`${appointment.endTime}`);
 
-            if (now >= start && now <= end) {
-                window.open(
-                    "https://us04web.zoom.us/j/72577264239?pwd=gaberra1OP3usMXwPJF8KWaZ1Rz5cf.1",
-                    "_blank"
-                );
-            } else {
+            if (!(now >= start && now <= end)) {
                 toast.error("Meeting is not allowed at this time", { autoClose: 2000 });
+                return;
             }
 
+            toast.warn("Doctor has not started the meeting yet", { autoClose: 2000 });
+            return;
+
         } catch (error) {
-            console.log("Time validation error: ", error);
+            console.log(error);
             toast.error("Something went wrong");
         } finally {
             setLoadingId(null);
@@ -182,7 +191,7 @@ const MyAppointments = () => {
                                                 {loadingId === doctorWrapper.appointmentId ? (
                                                     <>
                                                         <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-                                                        Sending...
+                                                        Redirecting...
                                                     </>
                                                 ) : (
                                                     "Start Call"
