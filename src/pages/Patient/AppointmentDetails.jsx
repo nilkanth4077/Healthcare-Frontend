@@ -49,7 +49,7 @@ const AppointmentDetails = () => {
     useEffect(() => {
 
         if (!token) {
-            toast.error("You are not logged in");
+            toast.error("Please login first !!");
             navigate("/login");
             return;
         }
