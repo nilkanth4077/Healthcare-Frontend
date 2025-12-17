@@ -7,13 +7,14 @@ import Navbar from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import BaseUrl from "../../reusables/BaseUrl";
 import DoctorDetailsModal from "./DoctorDetailsModal";
+import PatientDetailsModal from "./PatientDetailsModal";
 
-const DoctorDetails = () => {
+const PatientDetails = () => {
     const navigate = useNavigate();
-    const [doctor, setDoctor] = useState({});
+    const [patient, setPatient] = useState({});
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setModalOpen] = useState(false);
-    const { docId } = useParams();
+    const { patientId } = useParams();
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -25,49 +26,49 @@ const DoctorDetails = () => {
             return;
         }
 
-        const fetchDoctor = async () => {
+        const fetchPatient = async () => {
             try {
                 const response = await axios.get(
-                    `${BaseUrl}/get/doctor`,
+                    `${BaseUrl}/get/user`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                         params: {
-                            docId: docId,
+                            patientId: patientId,
                         }
                     }
                 );
 
                 if (response.data.statusCode === 200) {
-                    setDoctor(response.data.data);
-                    // console.log("Doc data: ", response.data.data)
+                    setPatient(response.data.data);
+                    console.log("Patient data: ", response.data.data) 
                 } else {
-                    toast.error(response.data.message || "Failed to fetch doctor.");
+                    toast.error(response.data.message || "Failed to fetch patient.");
                 }
             } catch (error) {
-                toast.error("Something went wrong while fetching doctor.");
+                toast.error("Something went wrong while fetching patient.");
             } finally {
                 setLoading(false);
             }
         };
 
-        if (docId) fetchDoctor();
-    }, [docId, navigate]);
+        if (patientId) fetchPatient();
+    }, [patientId, navigate]);
 
     return (
         <>
             {/* <Navbar /> */}
             <div className="min-h-screen bg-gray-100 px-4 py-8">
                 <h4 className="text-3xl font-bold mb-6 text-center text-gray-800">
-                    Doctor Details
+                    Patient Details
                 </h4>
 
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-10">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary border-solid"></div>
                         <p className="mt-4 text-gray-600 font-medium">
-                            Fetching doctor details, please wait...
+                            Fetching patient details, please wait...
                         </p>
                     </div>
                 ) : (
@@ -76,49 +77,31 @@ const DoctorDetails = () => {
                             <tbody>
                                 <tr>
                                     <th className="w-1/4 text-center border border-gray-500 py-2">First Name</th>
-                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.firstName}</td>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{patient.firstName}</td>
                                 </tr>
                                 <tr>
                                     <th className="w-1/4 text-center border border-gray-500 py-2">Last Name</th>
-                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.lastName}</td>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{patient.lastName}</td>
                                 </tr>
                                 <tr>
                                     <th className="w-1/4 text-center border border-gray-500 py-2">Email</th>
-                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.email}</td>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{patient.email}</td>
                                 </tr>
                                 <tr>
-                                    <th className="w-1/4 text-center border border-gray-500 py-2">Verification Status</th>
-                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.verificationStatus}</td>
-                                </tr>
-                                <tr>
-                                    <th className="w-1/4 text-center border border-gray-500 py-2">Speciality</th>
-                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.specialization}</td>
+                                    <th className="w-1/4 text-center border border-gray-500 py-2">Status</th>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{patient.active.toString()}</td>
                                 </tr>
                                 <tr>
                                     <th className="w-1/4 text-center border border-gray-500 py-2">Mobile</th>
-                                    <td className="w-3/4 py-3 text-center border border-gray-500">{doctor.mobile}</td>
-                                </tr>
-                                <tr>
-                                    <th className="w-1/4 text-center border border-gray-500 py-2">Document Size</th>
-                                    <td className="w-3/4 py-3 text-center border border-gray-500">{(doctor.documentSize / 1024).toString().substring(0, 7)} KB</td>
+                                    <td className="w-3/4 py-3 text-center border border-gray-500">{patient.mobile}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        {doctor.document && (
-                            <div className="bg-white shadow-md rounded-lg mt-4">
-                                <iframe
-                                    title="Doctor Document"
-                                    src={`data:application/pdf;base64,${doctor.document}`}
-                                    className="rounded shadow w-full"
-                                    style={{ minHeight: "1000px" }}
-                                />
-                            </div>
-                        )}
                         <div className="p-3 flex justify-center">
-                            <DoctorDetailsModal
+                            <PatientDetailsModal
                                 isOpen={isModalOpen}
                                 onClose={() => setModalOpen(false)}
-                                doctor={doctor}
+                                patient={patient}
                             />
                         </div>
                     </>
@@ -129,4 +112,4 @@ const DoctorDetails = () => {
     );
 };
 
-export default DoctorDetails;
+export default PatientDetails;

@@ -147,3 +147,39 @@ export const getAppointmentBySlotId = async (slotId, token) => {
         throw error;
     }
 };
+
+export const getAllUsers = async (token) => {
+    try {
+        const response = await axios.get(
+            `${BaseUrl}/admin/get/all-users`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        // console.log("Get all users response: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.log("Error api: ", error);
+        throw error;
+    }
+};
+
+export const getAllAppointments = async (token) => {
+    try {
+        const response = await axios.get(
+            `${BaseUrl}/admin/get/all-appointments`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        // console.log("Get all apps response: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.log("Error api: ", error);
+        throw error;
+    }
+};

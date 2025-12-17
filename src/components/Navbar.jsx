@@ -41,8 +41,8 @@ export default function Navigation() {
         USER: [
             { id: 1, title: "Home", link: "/" },
             { id: 2, title: "My Appointments", link: "/my-appointments" },
-            { id: 3, title: "Video Call", link: "https://vc-react-frontend.vercel.app/", target: "_blank" },
-            { id: 4, title: "Contact", link: "/" },
+            { id: 3, title: "Contact", link: "/" },
+            // { id: 4, title: "Video Call", link: "https://vc-react-frontend.vercel.app/", target: "_blank" },
         ],
         DOCTOR: [
             { id: 1, title: "Dashboard", link: "/doctor-dashboard" },
@@ -89,7 +89,7 @@ export default function Navigation() {
                                         href={menu.link}
                                         target={menu.target || "_self"}
                                         rel={menu.target === "_blank" ? "noopener noreferrer" : ""}
-                                        className="inline-block py-1 px-3 text-primary hover:text-secondary hover:shadow-[0_3px_0_-1px_#ef4444] font-semibold">
+                                        className="inline-block py-1 px-3 text-primary hover:text-secondary font-semibold">
                                         {menu.title}
                                     </a>
                                 </li>
